@@ -3,9 +3,7 @@ const framePrices = { "6x8": 899, "8x10": 1199, "12x16": 1499, "16x20": 1999 };
 const productData = { everyday: { name: "The Everyday", price: 899 }, gallery: { name: "The Gallery", price: 1199 }, heritage: { name: "The Heritage", price: 1499 }, "brass-edit": { name: "The Brass Edit", price: 1699 } };
 let cart = [];
 let selectedColor = "walnut";
-let selectedPhotos = [];
-let selectedLayout = "1-single";
-let activePhotoSlot = 0;
+let selectedPhoto = null;
 let publicConfig = { online_payments: false };
 let currentUser = null;
 
