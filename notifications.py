@@ -23,6 +23,14 @@ def notify_new_order(order: dict[str, Any], items: list[dict[str, Any]]) -> bool
         print("Order notification skipped: SMTP is not configured.")
         return False
 
+    customer_name = order.get("customer_name") or order.get("name") or "Customer"
+    customer_email = order.get("email") or ""
+    customer_phone = order.get("phone") or ""
+    delivery_address = order.get("address") or ""
+    delivery_city = order.get("city") or ""
+    postal_code = order.get("postal_code") or ""
+    customer_note = order.get("notes") or ""
+
     item_lines = []
     for item in items:
         details = item.get("size_label") or item.get("description") or ""
@@ -36,10 +44,10 @@ def notify_new_order(order: dict[str, Any], items: list[dict[str, Any]]) -> bool
         f"Order: {order['order_number']}\n"
         f"Total: ₹{order['amount']:,}\n"
         f"Payment: {order['payment_method'].upper()} ({order['payment_status'].replace('_', ' ')})\n\n"
-        f"Customer\n{order['customer_name']}\n{order['email']}\n{order['phone']}\n\n"
-        f"Delivery\n{order['address']}\n{order['city']} — {order['postal_code']}\n\n"
+        f"Customer\n{customer_name}\n{customer_email}\n{customer_phone}\n\n"
+        f"Delivery\n{delivery_address}\n{delivery_city} — {postal_code}\n\n"
         f"Items\n" + "\n".join(item_lines) +
-        (f"\n\nCustomer note: {order['notes']}" if order.get("notes") else "") +
+        (f"\n\nCustomer note: {customer_note}" if customer_note else "") +
         "\n\nOpen the Photosite admin dashboard to manage this order."
     )
     try:

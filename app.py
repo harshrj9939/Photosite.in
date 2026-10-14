@@ -20,6 +20,8 @@ from pathlib import Path
 from typing import Any
 
 import razorpay
+from PIL import Image, ImageOps, UnidentifiedImageError
+from dotenv import load_dotenv
 from flask import Flask, jsonify, redirect, render_template, request, send_from_directory, session, url_for
 from werkzeug.exceptions import RequestEntityTooLarge
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -31,6 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 UPLOAD_DIR = BASE_DIR / "uploads"
 DATABASE = DATA_DIR / "photosite.db"
+load_dotenv(BASE_DIR / ".env")
 ALLOWED_IMAGE_TYPES = {"png", "jpg", "jpeg", "webp"}
 
 FRAME_SIZES = {
@@ -59,7 +62,7 @@ PRODUCTS = {
 app = Flask(__name__)
 app.config.update(
     SECRET_KEY=os.getenv("FLASK_SECRET_KEY", secrets.token_urlsafe(32)),
-    MAX_CONTENT_LENGTH=8 * 1024 * 1024,
+    MAX_CONTENT_LENGTH=48 * 1024 * 1024,
     UPLOAD_FOLDER=str(UPLOAD_DIR),
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE="Lax",
@@ -121,28 +124,202 @@ def is_allowed_image(filename: str) -> bool:
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_IMAGE_TYPES
 
 
-def save_photo() -> str | None:
-    photo = request.files.get("photo")
-    if photo is None or not photo.filename:
+def save_photos() -> list[str]:
+    """Save all collage photos and return their relative upload paths."""
+    photos = [photo for photo in request.files.getlist("photos") if photo and photo.filename]
+
+    # Keep backward compatibility with the original single-photo upload field.
+    if not photos:
+        legacy_photo = request.files.get("photo")
+        if legacy_photo and legacy_photo.filename:
+            photos = [legacy_photo]
+
+    if len(photos) > 6:
+        raise ValueError("A collage can contain at most 6 photos.")
+
+    saved_paths: list[str] = []
+    for photo in photos:
+        if not is_allowed_image(photo.filename):
+            raise ValueError("Upload a PNG, JPG, JPEG, or WEBP photo.")
+        extension = secure_filename(photo.filename).rsplit(".", 1)[1].lower()
+        saved_name = f"{uuid.uuid4().hex}.{extension}"
+        photo.save(UPLOAD_DIR / saved_name)
+        saved_paths.append(f"uploads/{saved_name}")
+    return saved_paths
+
+
+COLLAGE_LAYOUTS = {
+    "2-side": 2,
+    "2-vertical": 2,
+    "2-diagonal": 2,
+    "3-feature": 3,
+    "3-horizontal": 3,
+    "3-vertical": 3,
+    "4-grid": 4,
+    "4-feature": 4,
+    "4-portrait": 4,
+    "5-grid": 5,
+    "5-feature": 5,
+    "6-grid": 6,
+    "6-landscape": 6,
+    "6-creative": 6,
+}
+
+
+def crop_to_fill(image: Image.Image, size: tuple[int, int]) -> Image.Image:
+    """Resize and crop an image to completely fill a target rectangle."""
+    return ImageOps.fit(
+        image.convert("RGB"),
+        size,
+        method=Image.Resampling.LANCZOS,
+        centering=(0.5, 0.5),
+    )
+
+
+def build_collage(photo_paths: list[str], layout: str) -> str | None:
+    """Create a print-ready JPEG collage from 2–6 uploaded photos."""
+    if not photo_paths:
         return None
-    if not is_allowed_image(photo.filename):
-        raise ValueError("Upload a PNG, JPG, JPEG, or WEBP photo.")
-    extension = secure_filename(photo.filename).rsplit(".", 1)[1].lower()
-    saved_name = f"{uuid.uuid4().hex}.{extension}"
-    photo.save(UPLOAD_DIR / saved_name)
-    return f"uploads/{saved_name}"
+
+    count = COLLAGE_LAYOUTS.get(layout)
+    if count is None or len(photo_paths) != count:
+        raise ValueError("The selected collage layout does not match the number of photos.")
+
+    images: list[Image.Image] = []
+    try:
+        for relative_path in photo_paths:
+            image = Image.open(BASE_DIR / relative_path)
+            image.load()
+            images.append(image.convert("RGB"))
+
+        canvas_size = (1600, 2000)
+        margin = 36
+        gap = 24
+        background = Image.new("RGB", canvas_size, "#f8f6f0")
+
+        def paste(photo: Image.Image, box: tuple[int, int, int, int]) -> None:
+            x, y, width, height = box
+            background.paste(crop_to_fill(photo, (width, height)), (x, y))
+
+        usable_w = canvas_size[0] - (margin * 2)
+        usable_h = canvas_size[1] - (margin * 2)
+
+        if layout == "2-side":
+            width = (usable_w - gap) // 2
+            paste(images[0], (margin, margin, width, usable_h))
+            paste(images[1], (margin + width + gap, margin, width, usable_h))
+
+        elif layout == "2-vertical":
+            height = (usable_h - gap) // 2
+            paste(images[0], (margin, margin, usable_w, height))
+            paste(images[1], (margin, margin + height + gap, usable_w, height))
+
+        elif layout == "2-diagonal":
+            paste(images[0], (margin, margin, int(usable_w * 0.62), int(usable_h * 0.55)))
+            paste(
+                images[1],
+                (
+                    int(usable_w * 0.38) + margin,
+                    int(usable_h * 0.45) + margin,
+                    int(usable_w * 0.62),
+                    int(usable_h * 0.55),
+                ),
+            )
+
+        elif layout == "3-feature":
+            main_w = int(usable_w * 0.58)
+            side_w = usable_w - main_w - gap
+            side_h = (usable_h - gap) // 2
+            paste(images[0], (margin, margin, main_w, usable_h))
+            paste(images[1], (margin + main_w + gap, margin, side_w, side_h))
+            paste(images[2], (margin + main_w + gap, margin + side_h + gap, side_w, side_h))
+
+        elif layout == "3-horizontal":
+            width = (usable_w - gap * 2) // 3
+            for index, image in enumerate(images):
+                paste(image, (margin + index * (width + gap), margin, width, usable_h))
+
+        elif layout == "3-vertical":
+            height = (usable_h - gap * 2) // 3
+            for index, image in enumerate(images):
+                paste(image, (margin, margin + index * (height + gap), usable_w, height))
+
+        elif layout == "4-feature":
+            main_w = int(usable_w * 0.62)
+            side_w = usable_w - main_w - gap
+            side_h = (usable_h - gap * 2) // 3
+            paste(images[0], (margin, margin, main_w, usable_h))
+            for index in range(3):
+                paste(
+                    images[index + 1],
+                    (margin + main_w + gap, margin + index * (side_h + gap), side_w, side_h),
+                )
+
+        elif layout in {"4-grid", "4-portrait"}:
+            width = (usable_w - gap) // 2
+            height = (usable_h - gap) // 2
+            for index, image in enumerate(images):
+                x = margin + (index % 2) * (width + gap)
+                y = margin + (index // 2) * (height + gap)
+                paste(image, (x, y, width, height))
+
+        elif layout == "5-feature":
+            main_h = int(usable_h * 0.58)
+            bottom_h = usable_h - main_h - gap
+            paste(images[0], (margin, margin, usable_w, main_h))
+            width = (usable_w - gap * 3) // 4
+            for index in range(4):
+                paste(
+                    images[index + 1],
+                    (margin + index * (width + gap), margin + main_h + gap, width, bottom_h),
+                )
+
+        elif layout == "5-grid":
+            top_h = (usable_h - gap) // 2
+            width = (usable_w - gap * 2) // 3
+            for index in range(3):
+                paste(images[index], (margin + index * (width + gap), margin, width, top_h))
+            bottom_w = (usable_w - gap) // 2
+            paste(images[3], (margin, margin + top_h + gap, bottom_w, top_h))
+            paste(images[4], (margin + bottom_w + gap, margin + top_h + gap, bottom_w, top_h))
+
+        else:
+            # 6-grid, 6-landscape, 6-creative
+            width = (usable_w - gap * 2) // 3
+            height = (usable_h - gap) // 2
+            for index, image in enumerate(images):
+                x = margin + (index % 3) * (width + gap)
+                y = margin + (index // 3) * (height + gap)
+                paste(image, (x, y, width, height))
+
+        saved_name = f"collage-{uuid.uuid4().hex}.jpg"
+        output_path = UPLOAD_DIR / saved_name
+        background.save(output_path, "JPEG", quality=92, optimize=True)
+        return f"uploads/{saved_name}"
+
+    except (UnidentifiedImageError, OSError) as error:
+        raise ValueError("One of the uploaded files is not a valid image.") from error
+    finally:
+        for image in images:
+            image.close()
 
 
-def calculate_items(items: list[dict[str, Any]], photo_path: str | None) -> tuple[list[dict[str, Any]], int]:
+def calculate_items(
+    items: list[dict[str, Any]],
+    photo_paths: list[str],
+) -> tuple[list[dict[str, Any]], int]:
     """Recalculate every price on the server; never trust a browser-supplied total."""
     if not 1 <= len(items) <= 10:
         raise ValueError("Your cart must contain between 1 and 10 items.")
 
     safe_items: list[dict[str, Any]] = []
     total = 0
-    for position, item in enumerate(items):
+    custom_item_seen = False
+
+    for item in items:
         item_type = item.get("type")
         quantity = item.get("quantity", 1)
+
         if not isinstance(quantity, int) or not 1 <= quantity <= 5:
             raise ValueError("Each item quantity must be between 1 and 5.")
 
@@ -150,8 +327,29 @@ def calculate_items(items: list[dict[str, Any]], photo_path: str | None) -> tupl
             size = item.get("size")
             color = item.get("color")
             purpose = item.get("purpose")
+            layout = item.get("collage_layout", "1-single")
+            expected_photos = item.get("photo_count", 1)
+
             if size not in FRAME_SIZES or color not in FRAME_COLORS or purpose not in PURPOSES:
                 raise ValueError("One of your custom frame options is invalid.")
+
+            if custom_item_seen:
+                raise ValueError("Only one custom collage frame can be added per order.")
+            custom_item_seen = True
+
+            if layout != "1-single":
+                if layout not in COLLAGE_LAYOUTS:
+                    raise ValueError("The selected collage layout is invalid.")
+                if expected_photos != COLLAGE_LAYOUTS[layout]:
+                    raise ValueError("The collage photo count does not match its layout.")
+                if len(photo_paths) != expected_photos:
+                    raise ValueError("Please upload every photo required for your selected collage.")
+                collage_path = build_collage(photo_paths, layout)
+            else:
+                if len(photo_paths) > 1:
+                    raise ValueError("Select a collage layout when uploading multiple photos.")
+                collage_path = photo_paths[0] if photo_paths else None
+
             safe_item = {
                 "type": "custom",
                 "name": "Custom photo frame",
@@ -162,13 +360,19 @@ def calculate_items(items: list[dict[str, Any]], photo_path: str | None) -> tupl
                 "purpose": purpose,
                 "quantity": quantity,
                 "unit_price": FRAME_SIZES[size]["price"],
-                "photo": photo_path if position == 0 else None,
+                "photo": collage_path,
+                "photos": photo_paths,
+                "collage_layout": layout,
+                "photo_count": len(photo_paths),
             }
+
         elif item_type == "product":
             product_id = item.get("product_id")
             product = PRODUCTS.get(product_id)
+
             if not product:
                 raise ValueError("One of the selected products is unavailable.")
+
             safe_item = {
                 "type": "product",
                 "product_id": product_id,
@@ -177,14 +381,15 @@ def calculate_items(items: list[dict[str, Any]], photo_path: str | None) -> tupl
                 "quantity": quantity,
                 "unit_price": product["price"],
             }
+
         else:
             raise ValueError("Invalid item in cart.")
 
         safe_item["line_total"] = safe_item["quantity"] * safe_item["unit_price"]
         total += safe_item["line_total"]
         safe_items.append(safe_item)
-    return safe_items, total
 
+    return safe_items, total
 
 def order_number() -> str:
     return f"PS-{datetime.now(timezone.utc):%Y%m%d}-{secrets.token_hex(3).upper()}"
@@ -219,22 +424,44 @@ def customer_required(view):
     return wrapped
 
 
+def admin_credentials_valid(username: str, password: str) -> bool:
+    load_dotenv(BASE_DIR / ".env", override=True)
+    expected_user = os.getenv("ADMIN_USERNAME", "admin").strip()
+    expected_password = os.getenv("ADMIN_PASSWORD", "change-this-before-launch").strip()
+    provided_user = username.strip()
+    provided_password = password.strip()
+
+    candidates = {expected_password}
+    if expected_password.endswith(","):
+        candidates.add(expected_password.rstrip(","))
+    if expected_password.endswith(" "):
+        candidates.add(expected_password.rstrip())
+
+    return hmac.compare_digest(provided_user, expected_user) and provided_password in candidates
+
+
 def admin_required(view):
     @wraps(view)
     def wrapped(*args, **kwargs):
+        if session.get("admin_authenticated"):
+            return view(*args, **kwargs)
+
+        accepts_html = "html" in request.headers.get("Accept", "").lower() or request.path.startswith("/admin")
         authorization = request.headers.get("Authorization", "")
-        if not authorization.startswith("Basic "):
-            return ("Login required", 401, {"WWW-Authenticate": 'Basic realm="Photosite admin"'})
-        try:
-            decoded = b64decode(authorization.split(" ", 1)[1]).decode("utf-8")
-            username, password = decoded.split(":", 1)
-        except (ValueError, UnicodeDecodeError):
+        if authorization.startswith("Basic "):
+            try:
+                decoded = b64decode(authorization.split(" ", 1)[1]).decode("utf-8")
+                username, password = decoded.split(":", 1)
+            except (ValueError, UnicodeDecodeError):
+                return ("Invalid login", 401, {"WWW-Authenticate": 'Basic realm="Photosite admin"'})
+            if admin_credentials_valid(username, password):
+                session["admin_authenticated"] = True
+                return view(*args, **kwargs)
             return ("Invalid login", 401, {"WWW-Authenticate": 'Basic realm="Photosite admin"'})
-        expected_user = os.getenv("ADMIN_USERNAME", "admin")
-        expected_password = os.getenv("ADMIN_PASSWORD", "change-this-before-launch")
-        if not (hmac.compare_digest(username, expected_user) and hmac.compare_digest(password, expected_password)):
-            return ("Invalid login", 401, {"WWW-Authenticate": 'Basic realm="Photosite admin"'})
-        return view(*args, **kwargs)
+
+        if accepts_html:
+            return redirect(url_for("admin_login"))
+        return ("Login required", 401, {"WWW-Authenticate": 'Basic realm="Photosite admin"'})
     return wrapped
 
 
@@ -345,8 +572,8 @@ def create_order():
         return jsonify({"error": "Online payments are not configured yet. Please choose Cash on Delivery."}), 400
 
     try:
-        photo_path = save_photo()
-        safe_items, total = calculate_items(items, photo_path)
+        photo_paths = save_photos()
+        safe_items, total = calculate_items(items, photo_paths)
     except ValueError as error:
         return jsonify({"error": str(error)}), 400
 
@@ -369,7 +596,14 @@ def create_order():
             connection.execute("UPDATE orders SET razorpay_order_id = ? WHERE id = ?", (payment_order["id"], internal_id))
         response["razorpay"] = {"key": os.environ["RAZORPAY_KEY_ID"], "order_id": payment_order["id"], "name": "Photosite", "description": f"Order {number}"}
     else:
-        notify_new_order({"order_number": number, "amount": total, "payment_method": "cod", "payment_status": payment_status, **fields}, safe_items)
+        notify_new_order({
+            "order_number": number,
+            "amount": total,
+            "payment_method": "cod",
+            "payment_status": payment_status,
+            "customer_name": fields["name"],
+            **fields,
+        }, safe_items)
     return jsonify(response), 201
 
 
@@ -417,6 +651,18 @@ def admin_dashboard():
     return render_template("admin.html", orders=orders, metrics=metrics, customers=customers,
                            notifications_enabled=is_email_configured(),
                            notification_email=os.getenv("NOTIFICATION_EMAIL", "Not configured"))
+
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "")
+        if admin_credentials_valid(username, password):
+            session["admin_authenticated"] = True
+            return redirect(url_for("admin_dashboard"))
+        return render_template("admin_login.html", error="Incorrect username or password."), 401
+    return render_template("admin_login.html", error=None)
 
 
 @app.patch("/api/admin/orders/<int:order_id>/status")

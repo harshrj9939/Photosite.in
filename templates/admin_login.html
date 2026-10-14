@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Photosite Admin Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <style>
+      body { display: grid; place-items: center; min-height: 100vh; background: linear-gradient(180deg, #f8f6f0 0%, #efe7dc 100%); }
+      .login-box { width: min(420px, calc(100vw - 32px)); background: rgba(255,255,255,0.8); border: 1px solid rgba(30,32,29,0.12); border-radius: 24px; padding: 32px 28px; box-shadow: 0 24px 60px rgba(30,32,29,0.12); }
+      .eyebrow { margin-bottom: 14px; }
+      h1 { margin: 0 0 10px; font-size: clamp(2.1rem, 4vw, 2.8rem); }
+      form { display: grid; gap: 16px; margin-top: 24px; }
+      label { display: grid; gap: 8px; font-size: 0.9rem; font-weight: 600; }
+      input { width: 100%; border: 1px solid rgba(30,32,29,0.12); border-radius: 12px; padding: 14px 16px; background: #fff; }
+      .btn { width: 100%; margin-top: 6px; }
+      .error { margin: 0; color: #b33636; font-weight: 600; }
+      .hint { margin-top: 14px; color: var(--muted); font-size: 0.82rem; }
+    </style>
+  </head>
+  <body>
+    <main class="login-box">
+      <div class="eyebrow">Private dashboard</div>
+      <h1>Photosite admin</h1>
+      {% if error %}<p class="error">{{ error }}</p>{% endif %}
+      <form method="post" action="{{ url_for('admin_login') }}">
+        <label>
+          Username
+          <input type="text" name="username" placeholder="Enter admin username" autocomplete="username" required />
+        </label>
+        <label>
+          Password
+          <input type="password" name="password" placeholder="Enter admin password" autocomplete="current-password" required />
+        </label>
+        <button class="btn btn-primary" type="submit">Log in</button>
+      </form>
+      <p class="hint">Use the admin username and password from your environment variables or .env file.</p>
+    </main>
+  </body>
+</html>
