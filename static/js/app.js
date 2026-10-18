@@ -4,6 +4,12 @@ const productData = { everyday: { name: "The Everyday", price: 899 }, gallery: {
 let cart = [];
 let selectedColor = "walnut";
 let selectedPhoto = null;
+
+// Add these variables for the collage customizer
+let selectedLayout = '1-single'
+let selectedPhotos = [null]
+let activePhotoSlot = 0
+
 let publicConfig = { online_payments: false };
 let currentUser = null;
 

@@ -131,6 +131,56 @@ nav {
   display:none;
 }
 
+
+/*  WhatsApp Button CSS */
+.whatsapp-float {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  bottom: 22px;
+  right: 22px;
+  background-color: #25D366;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+  z-index: 9999;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.whatsapp-float svg {
+  width: 34px;
+  height: 34px;
+}
+
+.whatsapp-float:hover {
+  transform: translateY(-4px);
+}
+
+.whatsapp-float:focus-visible {
+  outline: 3px solid #111;
+  outline-offset: 4px;
+}
+
+@media (max-width: 480px) {
+  .whatsapp-float {
+    width: 54px;
+    height: 54px;
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .whatsapp-float svg {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+
+
 /* ==========================================================
    HERO
    ========================================================== */
