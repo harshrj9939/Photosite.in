@@ -235,6 +235,100 @@ function renderCollagePreview() {
       : 'none'
 }
 
+
+
+/* Select a frame and update the live preview */
+let selectedFrame = 'walnut';
+
+function setupFrameDropdown() {
+  const dropdown = document.getElementById('frameDropdown');
+  const trigger = document.getElementById('frameDropdownTrigger');
+  const optionsPanel = document.getElementById('frameDropdownOptions');
+  const selectedLabel = document.getElementById('selectedFrameLabel');
+  const selectedFrameInput = document.getElementById('selectedFrame');
+  const frameOverlay = document.getElementById('selectedFrameOverlay');
+
+  if (
+    !dropdown ||
+    !trigger ||
+    !optionsPanel ||
+    !selectedLabel ||
+    !selectedFrameInput
+  ) {
+    return;
+  }
+
+  function closeDropdown() {
+    optionsPanel.hidden = true;
+    trigger.setAttribute('aria-expanded', 'false');
+  }
+
+  function selectFrame(option) {
+  const frameName = option.dataset.frame
+  const frameImage = option.dataset.image
+  const label = option.querySelector('span')?.textContent.trim()
+
+  if (!frameName || !frameImage) return
+
+  selectedFrame = frameName
+  selectedFrameInput.value = frameName
+  selectedLabel.textContent = label || frameName
+
+  if (frameOverlay) {
+    frameOverlay.src = frameImage
+  }
+
+  dropdown.querySelectorAll('.frame-dropdown-option').forEach((item) => {
+    const isSelected = item === option
+    item.classList.toggle('selected', isSelected)
+    item.setAttribute('aria-pressed', String(isSelected))
+  })
+
+  closeDropdown()
+}
+
+  trigger.addEventListener('click', () => {
+    const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+
+    optionsPanel.hidden = isOpen;
+    trigger.setAttribute('aria-expanded', String(!isOpen));
+  });
+
+  optionsPanel.addEventListener('click', (event) => {
+    const option = event.target.closest('.frame-dropdown-option');
+
+    if (option) {
+      selectFrame(option);
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!dropdown.contains(event.target)) {
+      closeDropdown();
+    }
+  });
+
+  const initialOption =
+    dropdown.querySelector('.frame-dropdown-option.selected') ||
+    dropdown.querySelector('.frame-dropdown-option');
+
+  if (initialOption) {
+    selectFrame(initialOption);
+  }
+
+  dropdown.resetSelectedFrame = () => {
+    const defaultOption =
+      dropdown.querySelector(
+        '.frame-dropdown-option[data-frame="walnut"]'
+      ) || dropdown.querySelector('.frame-dropdown-option');
+
+    if (defaultOption) {
+      selectFrame(defaultOption);
+    }
+  };
+}
+
+
 function resetCustomizer() {
   selectedLayout = '1-single'
   selectedPhotos = [null]
@@ -669,20 +763,25 @@ async function init() {
   } catch {
     /* COD remains available if offline. */
   }
+
   updateAccountLink()
+
   if (!publicConfig.online_payments) {
     $('#razorpayOption').classList.add('disabled')
     $('#razorpayOption input').disabled = true
     $('#razorpayOption').title =
       'Online payments will be available when Razorpay is configured.'
   }
+
   renderCart()
   setupCarousel()
   setupFrameGallery()
   setupTestimonials()
   renderLayoutOptions()
   renderPhotoSlots()
+  setupFrameDropdown()
   renderCollagePreview()
+
   $$('.open-customizer').forEach((button) =>
     button.addEventListener('click', (event) => {
       event.preventDefault()
@@ -690,58 +789,73 @@ async function init() {
       setModal($('#customizer'), true)
     }),
   )
+
   $('#modalClose').addEventListener('click', () =>
     setModal($('#customizer'), false),
   )
+
   $('#checkoutClose').addEventListener('click', () =>
     setModal($('#checkoutModal'), false),
   )
+
   $('#successClose').addEventListener('click', () =>
     setModal($('#successModal'), false),
   )
+
   $$('.modal').forEach((modal) =>
     modal.addEventListener('click', (event) => {
       if (event.target === modal) setModal(modal, false)
     }),
   )
+
   $('#cartButton').addEventListener('click', openCart)
   $('#closeCart').addEventListener('click', closeCart)
   $('#drawerBackdrop').addEventListener('click', closeCart)
+
   $('#checkoutButton').addEventListener('click', () => {
     if (!cart.length) return
     closeCart()
     renderCheckout()
+
     if (currentUser) {
       $('#name').value = currentUser.name
       $('#email').value = currentUser.email
     }
+
     setModal($('#checkoutModal'), true)
   })
+
   $('#accountLink').addEventListener('click', (event) => {
     if ($('#accountLink').dataset.guest === 'true') {
       event.preventDefault()
       openAuth()
     }
   })
+
   $('#authClose').addEventListener('click', () =>
     setModal($('#authModal'), false),
   )
+
   $('#authForm').addEventListener('submit', submitAuth)
+
   $$('.swatch').forEach((swatch) =>
     swatch.addEventListener('click', () => {
       selectedColor = swatch.dataset.color
       $$('.swatch').forEach((item) => item.classList.remove('active'))
       swatch.classList.add('active')
+
       const colors = {
         walnut: ['#a26344', '#6d3d28'],
         oak: ['#e4ded0', '#42453f'],
         charcoal: ['#3e413d', '#242624'],
         brass: ['#c48a3f', '#79501e'],
       }
+
       $('#previewFrame').style.background = colors[selectedColor][0]
       $('#previewFrame').style.borderColor = colors[selectedColor][1]
     }),
   )
+
   $('#size').addEventListener('change', updateCustomPrice)
 
   $('#photoUpload').addEventListener('change', (event) => {
@@ -783,6 +897,7 @@ async function init() {
           : `Custom ${layout.count}-photo collage`,
       size,
       color: selectedColor,
+      selectedFrame,
       purpose: $('#purpose').value,
       price: framePrices[size],
       files,
@@ -793,9 +908,11 @@ async function init() {
     resetCustomizer()
     setModal($('#customizer'), false)
   })
+
   $$('.add-product').forEach((button) =>
     button.addEventListener('click', () => {
       const product = productData[button.dataset.product]
+
       addToCart({
         type: 'product',
         product_id: button.dataset.product,
@@ -804,18 +921,24 @@ async function init() {
       })
     }),
   )
+
   $('#checkoutForm').addEventListener('submit', submitOrder)
+
   $('#menuButton').addEventListener('click', () => {
     const links = $('#navLinks')
     links.style.display = links.style.display === 'flex' ? 'none' : 'flex'
   })
+
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
       $$('.modal.open').forEach((modal) => setModal(modal, false))
       closeCart()
     }
   })
-  if (new URLSearchParams(window.location.search).get('signin') === '1')
+
+  if (new URLSearchParams(window.location.search).get('signin') === '1') {
     openAuth()
+  }
 }
+
 document.addEventListener('DOMContentLoaded', init)

@@ -33,7 +33,7 @@
     <section class="hero">
       <!-- Left side: Photosite studio image -->
       <div class="hero-visual hero-studio">
-        <img src="{{ url_for('static', filename='../static/frames/Vibrant Red Photosite Studio Interior.png') }}"
+        <img src="../static/frames/photosite-studio.png"
           alt="Photosite photo studio with photo frames, printing equipment, and red illuminated walls"
           class="hero-studio-image">
       </div>
@@ -68,9 +68,6 @@
       </div>
     </section>
 
-
-
-
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/917979094946?text=Hello%20Photosite%2C%20I%20want%20to%20know%20more." class="whatsapp-float"
       target="_blank" rel="noopener noreferrer" aria-label="Chat with us on WhatsApp" title="Chat on WhatsApp">
@@ -79,7 +76,6 @@
           d="M16.04 3C8.88 3 3.05 8.79 3.05 15.92c0 2.28.6 4.5 1.73 6.46L3 29l6.83-1.78a13.1 13.1 0 0 0 6.2 1.57h.01c7.16 0 13-5.8 13-12.92A12.8 12.8 0 0 0 25.2 6.7 12.9 12.9 0 0 0 16.04 3Zm0 23.6h-.01a10.8 10.8 0 0 1-5.48-1.49l-.39-.23-4.05 1.06 1.08-3.93-.25-.4a10.65 10.65 0 0 1-1.65-5.69c0-5.9 4.83-10.7 10.76-10.7a10.7 10.7 0 0 1 7.61 3.14 10.58 10.58 0 0 1 3.15 7.57c0 5.9-4.83 10.7-10.77 10.7Zm5.9-8.02c-.32-.16-1.9-.93-2.2-1.03-.3-.11-.51-.16-.73.16-.21.32-.84 1.03-1.03 1.24-.19.22-.38.24-.7.08-.32-.16-1.35-.5-2.57-1.59-.95-.84-1.6-1.88-1.79-2.2-.19-.32-.02-.49.14-.65.14-.14.32-.38.48-.57.16-.19.21-.32.32-.54.11-.22.05-.41-.03-.57-.08-.16-.73-1.75-1-2.39-.26-.63-.53-.54-.73-.55h-.62c-.21 0-.56.08-.86.4-.3.32-1.13 1.1-1.13 2.68s1.16 3.11 1.32 3.33c.16.22 2.28 3.46 5.52 4.85.77.33 1.37.53 1.84.68.77.24 1.47.21 2.02.13.62-.09 1.9-.77 2.17-1.52.27-.75.27-1.4.19-1.53-.08-.13-.3-.21-.62-.37Z" />
       </svg>
     </a>
-
 
     <section class="category-strip" aria-label="Frame categories">
       <div class="category-track">
@@ -97,6 +93,75 @@
         <div class="category"><i>♧</i> Made-to-gift</div>
       </div>
     </section>
+
+    <section class="section products" id="shop">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">Most loved</div>
+          <h2>Frames that feel like home.</h2>
+        </div>
+       
+      </div>
+      <div class="carousel-wrap">
+        <div class="carousel" id="carousel">
+          <article class="product">
+            <div class="product-visual"><img src="../static/frames/frame1.jpg" alt="Concert crowd" /></div>
+            <div class="product-info">
+              <div>
+                <h3>Size: 10 x 15</h3>
+                <p>Classic wood</p>
+              </div>
+              <div>
+                <div class="price">From ₹500</div><button class="text-button add-product" data-product="everyday">Add to
+                  bag</button>
+              </div>
+            </div>
+          </article>
+          <article class="product">
+            <div class="product-visual"><img src="../static/frames/frame2.jpg" alt="Mountain lake" /></div>
+            <div class="product-info">
+              <div>
+                <h3>Size: 12 x 18</h3>
+                <p>Modern wood</p>
+              </div>
+              <div>
+                <div class="price">From ₹700</div><button class="text-button add-product" data-product="gallery">Add
+                  to bag</button>
+              </div>
+            </div>
+          </article>
+          <article class="product">
+            <div class="product-visual"><img src="../static/frames/frame3.jpg" alt="Bright home interior" /></div>
+            <div class="product-info">
+              <div>
+                <h3>Size: 10 x 15</h3>
+                <p>Statement grain</p>
+              </div>
+              <div>
+                <div class="price">From ₹500</div><button class="text-button add-product" data-product="heritage">Add
+                  to bag</button>
+              </div>
+            </div>
+          </article>
+          <article class="product">
+            <div class="product-visual"><img src="../static/frames/frame4.jpg" alt="Person standing on hill" /></div>
+            <div class="product-info">
+              <div>
+                <h3>Size: 10 x 15</h3>
+                <p>Warm metal</p>
+              </div>
+              <div>
+                <div class="price">From ₹500</div><button class="text-button add-product"
+                  data-product="brass-edit">Add to bag</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+      <div class="carousel-controls"><button id="prev" aria-label="Previous frames">←</button><button id="next"
+          aria-label="Next frames">→</button></div>
+    </section>
+
     <section class="section" id="stories">
       <div class="section-heading">
         <div>
@@ -143,81 +208,7 @@
           </div>
         </a></div>
     </section>
-    <section class="section products" id="shop">
-      <div class="section-heading">
-        <div>
-          <div class="eyebrow">Most loved</div>
-          <h2>Frames that feel like home.</h2>
-        </div>
-        <p>Designed to work beautifully together, or make a little statement all on their own.</p>
-      </div>
-      <div class="carousel-wrap">
-        <div class="carousel" id="carousel">
-          <article class="product">
-            <div class="product-visual"><img
-                src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=650&q=80"
-                alt="Concert crowd" /></div>
-            <div class="product-info">
-              <div>
-                <h3>The Everyday</h3>
-                <p>Classic wood · 6 colours</p>
-              </div>
-              <div>
-                <div class="price">From ₹899</div><button class="text-button add-product" data-product="everyday">Add to
-                  bag</button>
-              </div>
-            </div>
-          </article>
-          <article class="product">
-            <div class="product-visual"><img
-                src="https://images.unsplash.com/photo-1507504031003-b417219a0fde?auto=format&fit=crop&w=650&q=80"
-                alt="Mountain lake" /></div>
-            <div class="product-info">
-              <div>
-                <h3>The Gallery</h3>
-                <p>Modern wood · 4 colours</p>
-              </div>
-              <div>
-                <div class="price">From ₹1,199</div><button class="text-button add-product" data-product="gallery">Add
-                  to bag</button>
-              </div>
-            </div>
-          </article>
-          <article class="product">
-            <div class="product-visual"><img
-                src="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=650&q=80"
-                alt="Bright home interior" /></div>
-            <div class="product-info">
-              <div>
-                <h3>The Heritage</h3>
-                <p>Statement grain · 3 colours</p>
-              </div>
-              <div>
-                <div class="price">From ₹1,499</div><button class="text-button add-product" data-product="heritage">Add
-                  to bag</button>
-              </div>
-            </div>
-          </article>
-          <article class="product">
-            <div class="product-visual"><img
-                src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=650&q=80"
-                alt="Person standing on hill" /></div>
-            <div class="product-info">
-              <div>
-                <h3>The Brass Edit</h3>
-                <p>Warm metal · 2 colours</p>
-              </div>
-              <div>
-                <div class="price">From ₹1,699</div><button class="text-button add-product"
-                  data-product="brass-edit">Add to bag</button>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-      <div class="carousel-controls"><button id="prev" aria-label="Previous frames">←</button><button id="next"
-          aria-label="Next frames">→</button></div>
-    </section>
+
     <section class="testimonial-area">
       <div class="testimonial-grid">
         <div>
@@ -244,14 +235,21 @@
     </section>
     <section class="custom-cta" id="customize">
       <div class="custom-box">
-        <div>
+        <div class="custom-copy">
           <div class="eyebrow">Made only for you</div>
           <h2>Have something special in mind?</h2>
-        </div><button class="btn btn-primary open-customizer">Create your frame <span
-            aria-hidden="true">→</span></button>
+          <h3>Connect with us on WhatsApp. We’ll help you make it.</h3>
+        </div>
+        <a class="btn btn-primary"
+          href="https://wa.me/917979094946?text=Hello%20Photosite%2C%20I%20want%20to%20create%20a%20custom%20frame."
+          target="_blank" rel="noopener noreferrer">
+          Chat on WhatsApp <span aria-hidden="true">→</span>
+        </a>
       </div>
     </section>
+
   </main>
+
   <footer id="footer">
     <div class="footer-inner">
       <div class="footer-main">
@@ -270,62 +268,135 @@
           <h4>Need a hand?</h4><a href="mailto:hello@photosite.in">hello@photosite.in</a><a href="#footer">Shipping &
             returns</a><a href="#footer">FAQs</a><a href="#footer">Contact us</a>
         </div>
+        <div class="footer-map">
+          <div class="footer-map-heading">
+            <h4>Find us</h4>
+            <a href="https://maps.app.goo.gl/ez1Jw1U1HqDJeW9d7?g_st=aw" target="_blank" rel="noopener noreferrer">
+              Open map <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+
+          <div class="footer-map-frame">
+            <a href="https://maps.app.goo.gl/ez1Jw1U1HqDJeW9d7?g_st=aw" target="_blank" rel="noopener noreferrer"
+              aria-label="Open Photosite shop location in Google Maps">
+              <iframe src="https://maps.google.com/maps?q=Photosite&output=embed" title="Photosite shop location"
+                loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+              </iframe>
+            </a>
+          </div>
+
+        </div>
       </div>
       <div class="footer-bottom"><span>© 2026 Photosite. Made for the moments.</span><span>Privacy · Terms ·
           India</span></div>
     </div>
   </footer>
+
   <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping bag" aria-hidden="true">
     <div class="drawer-head">
       <h2>Your bag</h2><button class="round-icon" id="closeCart" aria-label="Close shopping bag">×</button>
     </div>
+    <div id="cartItems" class="cart-items">
+      <p class="empty-cart">Your bag is waiting for a memory.</p>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total"><span>Subtotal</span><strong id="cartTotal">₹0</strong></div>
+      <p>Shipping is calculated at checkout. Free above ₹1,499.</p><button class="btn btn-primary" id="checkoutButton"
+        disabled>Checkout <span aria-hidden="true">→</span></button>
+    </div>
+  </aside>
+
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <div class="modal" id="customizer" role="dialog" aria-modal="true" aria-labelledby="customizerTitle">
+    <div class="modal-card customizer-card">
+      <button class="round-icon modal-close" id="modalClose" aria-label="Close customizer">×</button>
+      <div class="eyebrow">Your frame, your way</div>
+      <h2 id="customizerTitle">Let’s make it yours.</h2>
+      <p>Choose a collage style, upload your memories, and preview the final frame.</p>
+
+      
+<div class="customizer-grid">
+  <div class="preview-pane">
+    <div
+      class="custom-preview-frame collage-layout layout-1-single"
+      id="previewFrame"
+    >
+      <!-- Selected frame image -->
+      <img
+        id="selectedFrameOverlay"
+        class="selected-frame-overlay"
+        src="{{ url_for('static', filename='frames/frame1.png') }}"
+        alt=""
+        aria-hidden="true"
+      />
+
+      <!-- Uploaded photos appear here -->
+      <div class="collage-preview-grid" id="collagePreviewGrid"></div>
+
+      <span class="placeholder" id="previewPlaceholder">
+        Your favourite<br />photo goes here
+      </span>
+    </div>
   </div>
 
-  <div class="frame-gallery-controls">
-    <button type="button" id="frameGalleryPrev"
-            aria-label="Previous collection photos">←</button>
-    <div class="frame-gallery-dots" id="frameGalleryDots"
-         aria-label="Gallery position"></div>
-    <button type="button" id="frameGalleryNext"
-            aria-label="Next collection photos">→</button>
-  </div>
-</section>
-  
-      <section class="category-strip" aria-label="Frame categories"><div class="category-track"><div class="category"><i>♥</i> Family memories</div><div class="category"><i>♢</i> Wedding stories</div><div class="category"><i>✦</i> Birthday magic</div><div class="category"><i>☼</i> Wall art & prints</div><div class="category"><i>✓</i> Certificate frames</div><div class="category"><i>♧</i> Made-to-gift</div><div class="category"><i>♥</i> Family memories</div><div class="category"><i>♢</i> Wedding stories</div><div class="category"><i>✦</i> Birthday magic</div><div class="category"><i>☼</i> Wall art & prints</div><div class="category"><i>✓</i> Certificate frames</div><div class="category"><i>♧</i> Made-to-gift</div></div></section>
-      <section class="section" id="stories"><div class="section-heading"><div><div class="eyebrow">Find your frame</div><h2>Made for every kind of love.</h2></div><p>Whatever you’re celebrating, there’s a frame waiting to hold it close.</p></div><div class="purpose-grid"><a href="#customize" class="purpose-card open-customizer"><img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1000&q=80" alt="Friends laughing together" /><div><h3>Friends & family</h3><span>Hold on to your everyday magic →</span></div></a><a href="#customize" class="purpose-card open-customizer"><img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=900&q=80" alt="Wedding hands with rings" /><div><h3>Weddings</h3><span>Frame the beginning →</span></div></a><a href="#customize" class="purpose-card open-customizer"><img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=600&q=80" alt="Birthday party decorations" /><div><h3>Birthdays</h3><span>Make a wish last →</span></div></a><a href="#customize" class="purpose-card open-customizer"><img src="https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&w=600&q=80" alt="Decorative wall art" /><div><h3>Wall art</h3><span>Your space, your way →</span></div></a><a href="#customize" class="purpose-card open-customizer"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=600&q=80" alt="Gift box" /><div><h3>Gift it</h3><span>Give something felt →</span></div></a><a href="#customize" class="purpose-card open-customizer"><img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80" alt="Certificate on a desk" /><div><h3>Achievements</h3><span>Display your proudest moments →</span></div></a></div></section>
-      <section class="section products" id="shop"><div class="section-heading"><div><div class="eyebrow">Most loved</div><h2>Frames that feel like home.</h2></div><p>Designed to work beautifully together, or make a little statement all on their own.</p></div><div class="carousel-wrap"><div class="carousel" id="carousel"><article class="product"><div class="product-visual"><img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=650&q=80" alt="Concert crowd" /></div><div class="product-info"><div><h3>The Everyday</h3><p>Classic wood · 6 colours</p></div><div><div class="price">From ₹899</div><button class="text-button add-product" data-product="everyday">Add to bag</button></div></div></article><article class="product"><div class="product-visual"><img src="https://images.unsplash.com/photo-1507504031003-b417219a0fde?auto=format&fit=crop&w=650&q=80" alt="Mountain lake" /></div><div class="product-info"><div><h3>The Gallery</h3><p>Modern wood · 4 colours</p></div><div><div class="price">From ₹1,199</div><button class="text-button add-product" data-product="gallery">Add to bag</button></div></div></article><article class="product"><div class="product-visual"><img src="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=650&q=80" alt="Bright home interior" /></div><div class="product-info"><div><h3>The Heritage</h3><p>Statement grain · 3 colours</p></div><div><div class="price">From ₹1,499</div><button class="text-button add-product" data-product="heritage">Add to bag</button></div></div></article><article class="product"><div class="product-visual"><img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=650&q=80" alt="Person standing on hill" /></div><div class="product-info"><div><h3>The Brass Edit</h3><p>Warm metal · 2 colours</p></div><div><div class="price">From ₹1,699</div><button class="text-button add-product" data-product="brass-edit">Add to bag</button></div></div></article></div></div><div class="carousel-controls"><button id="prev" aria-label="Previous frames">←</button><button id="next" aria-label="Next frames">→</button></div></section>
-      <section class="testimonial-area"><div class="testimonial-grid"><div><div class="eyebrow">Kind words</div><h2>Small objects. Big feelings.</h2><div class="quote-mark">“</div><div class="rating">★★★★★</div><blockquote id="quoteText">It’s become my favourite corner of the house. Looking at it just brings me right back to that day.</blockquote><div class="person"><img id="personImage" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=140&q=80" alt="Customer portrait" /><div><b id="personName">Aanya Mehta</b><small id="personDetail">Mumbai · The Heritage frame</small></div></div></div><div class="testimonial-photo"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80" alt="Comfortable living room" /><div class="testimonial-frame"><img src="https://images.unsplash.com/photo-1511988617509-a57c8a288659?auto=format&fit=crop&w=450&q=80" alt="Friends together" /></div></div></div></section>
-      <section class="custom-cta" id="customize"><div class="custom-box"><div><div class="eyebrow">Made only for you</div><h2>Have something special in mind?</h2></div><button class="btn btn-primary open-customizer">Create your frame <span aria-hidden="true">→</span></button></div></section>
-    </main>
-    <footer id="footer"><div class="footer-inner"><div class="footer-main"><div><a href="#home" class="brand">Photo<span>site</span></a><p class="footer-blurb">Frames for every chapter, made with feeling in every detail.</p></div><div class="footer-col"><h4>Shop</h4><a href="#shop">Photo frames</a><a href="#shop">Prints</a><a href="#shop">Gift cards</a><button class="link-button open-customizer">Custom frame</button></div><div class="footer-col"><h4>About</h4><a href="#how-it-works">Our process</a><a href="#stories">Inspiration</a><a href="#footer">Journal</a><a href="#footer">Our promise</a></div><div class="footer-col"><h4>Need a hand?</h4><a href="mailto:hello@photosite.in">hello@photosite.in</a><a href="#footer">Shipping & returns</a><a href="#footer">FAQs</a><a href="#footer">Contact us</a></div></div><div class="footer-bottom"><span>© 2026 Photosite. Made for the moments.</span><span>Privacy · Terms · India</span></div></div></footer>
-    <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping bag" aria-hidden="true"><div class="drawer-head"><h2>Your bag</h2><button class="round-icon" id="closeCart" aria-label="Close shopping bag">×</button></div><div id="cartItems" class="cart-items"><p class="empty-cart">Your bag is waiting for a memory.</p></div><div class="cart-footer"><div class="cart-total"><span>Subtotal</span><strong id="cartTotal">₹0</strong></div><p>Shipping is calculated at checkout. Free above ₹1,499.</p><button class="btn btn-primary" id="checkoutButton" disabled>Checkout <span aria-hidden="true">→</span></button></div></aside><div class="drawer-backdrop" id="drawerBackdrop"></div>
-    <div class="modal" id="customizer" role="dialog" aria-modal="true" aria-labelledby="customizerTitle">
-      <div class="modal-card customizer-card">
-        <button class="round-icon modal-close" id="modalClose" aria-label="Close customizer">×</button>
-        <div class="eyebrow">Your frame, your way</div>
-        <h2 id="customizerTitle">Let’s make it yours.</h2>
-        <p>Choose a collage style, upload your memories, and preview the final frame.</p>
-
-      <div class="customizer-grid">
-        <div class="preview-pane">
-          <div class="custom-preview-frame collage-layout layout-1-single" id="previewFrame">
-            <div class="collage-preview-grid" id="collagePreviewGrid"></div>
-            <span class="placeholder" id="previewPlaceholder">Your favourite<br />photo goes here</span>
-          </div>
-        </div>
 
         <form class="custom-form" id="customFrameForm">
-          <label class="form-label">Choose a frame colour</label>
-          <div class="swatches">
-            <button class="swatch active" type="button" data-color="walnut" style="background:#a26344"
-              aria-label="Warm walnut"></button>
-            <button class="swatch" type="button" data-color="oak" style="background:#e4ded0"
-              aria-label="Soft oak"></button>
-            <button class="swatch" type="button" data-color="charcoal" style="background:#3e413d"
-              aria-label="Charcoal"></button>
-            <button class="swatch" type="button" data-color="brass" style="background:#c48a3f"
-              aria-label="Golden brass"></button>
-          </div>
+          
+
+
+<div class="form-label">Select your frame</div>
+
+<div class="frame-dropdown" id="frameDropdown">
+  <button
+    type="button"
+    class="frame-dropdown-trigger"
+    id="frameDropdownTrigger"
+    aria-expanded="false"
+    aria-controls="frameDropdownOptions"
+  >
+    <span id="selectedFrameLabel">Classic Walnut</span>
+    <span class="frame-dropdown-arrow">▾</span>
+  </button>
+
+  <div
+    class="frame-dropdown-options"
+    id="frameDropdownOptions"
+    hidden
+  >
+    <button type="button" class="frame-dropdown-option selected"
+      data-frame="walnut"
+      data-image="../static/frames/Glossy Mahogany and Black Portrait Frame.png">
+      <img src="../static/frames/Glossy Mahogany and Black Portrait Frame.png" alt="">
+      <span>Classic Walnut</span>
+    </button>
+
+    <button type="button" class="frame-dropdown-option"
+      data-frame="black"
+      data-image="../static/frames/Minimal Black Portrait Frame.png">
+      <img src="../static/frames/Minimal Black Portrait Frame.png" alt="">
+      <span>Modern Black</span>
+    </button>
+
+    <button type="button" class="frame-dropdown-option"
+      data-frame="oak"
+      data-image="../static/frames/Ornate Burgundy and Gold Picture Frame.png">
+      <img src="../static/frames/Ornate Burgundy and Gold Picture Frame.png" alt="">
+      <span>Natural Oak</span>
+    </button>
+
+    <button type="button" class="frame-dropdown-option"
+      data-frame="gold"
+      data-image="../static/frames/dfsdvsfsbfky.png">
+      <img src="../static/frames/dfsdvsfsbfky.png" alt="">
+      <span>Royal Gold</span>
+    </button>
+  </div>
+</div>
+
+<input type="hidden" id="selectedFrame" name="selected_frame" value="walnut">
+
+
+
 
           <label class="form-label" for="purpose">Frame purpose</label>
           <select class="form-select" id="purpose" required>
@@ -360,19 +431,89 @@
           <input id="photoUpload" type="file" accept="image/png,image/jpeg,image/webp" hidden />
           <p class="upload-help">JPG, PNG or WEBP · max 8 MB each. You can replace or remove any photo.</p>
 
-            <div class="order-total">
-              <span>Your custom frame</span>
-              <strong id="customTotal">₹899</strong>
-            </div>
-            <p class="form-error" id="customizerError"></p>
-            <button class="btn btn-primary" style="width:100%" type="submit">Add to bag <span aria-hidden="true">→</span></button>
-          </form>
-        </div>
+          <div class="order-total">
+            <span>Your custom frame</span>
+            <strong id="customTotal">₹899</strong>
+          </div>
+          <p class="form-error" id="customizerError"></p>
+          <button class="btn btn-primary" style="width:100%" type="submit">Add to bag <span
+              aria-hidden="true">→</span></button>
+        </form>
       </div>
     </div>
-    <div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle"><div class="modal-card checkout-card"><button class="round-icon modal-close" id="checkoutClose" aria-label="Close checkout">×</button><div class="eyebrow">Secure checkout</div><h2 id="checkoutTitle">Almost yours.</h2><p>We’ll send your order details to this email.</p><form id="checkoutForm" class="checkout-form"><div class="checkout-layout"><div><label class="form-label" for="name">Full name</label><input class="form-input" id="name" name="name" autocomplete="name" required /><div class="two-col"><div><label class="form-label" for="email">Email address</label><input class="form-input" type="email" id="email" name="email" autocomplete="email" required /></div><div><label class="form-label" for="phone">Phone number</label><input class="form-input" type="tel" id="phone" name="phone" autocomplete="tel" required /></div></div><label class="form-label" for="address">Delivery address</label><textarea class="form-input" id="address" name="address" rows="3" autocomplete="street-address" required></textarea><div class="two-col"><div><label class="form-label" for="city">City</label><input class="form-input" id="city" name="city" autocomplete="address-level2" required /></div><div><label class="form-label" for="postalCode">PIN code</label><input class="form-input" id="postalCode" name="postal_code" autocomplete="postal-code" required /></div></div><label class="form-label" for="notes">Order note <span class="optional">(optional)</span></label><textarea class="form-input" id="notes" name="notes" rows="2" placeholder="Gift message or delivery note"></textarea><fieldset class="payment-options"><legend class="form-label">Payment method</legend><label><input type="radio" name="payment_method" value="cod" checked /> Cash on Delivery</label><label id="razorpayOption"><input type="radio" name="payment_method" value="razorpay" /> Secure online payment</label></fieldset></div><aside class="order-summary"><h3>Order summary</h3><div id="checkoutItems"></div><div class="summary-total"><span>Total</span><strong id="checkoutTotal">₹0</strong></div></aside></div><p id="checkoutError" class="form-error" role="alert"></p><button class="btn btn-primary" id="placeOrder" type="submit">Place order <span aria-hidden="true">→</span></button></form></div></div>
-    <div class="modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle"><div class="modal-card auth-card"><button class="round-icon modal-close" id="authClose" aria-label="Close sign in">×</button><div class="eyebrow">Keep your memories close</div><h2 id="authTitle">Welcome back.</h2><p id="authIntro">Sign in to see your orders and check out faster.</p><form id="authForm"><div id="authNameField" hidden><label class="form-label" for="authName">Your name</label><input class="form-input" id="authName" autocomplete="name" /></div><label class="form-label" for="authEmail">Email address</label><input class="form-input" id="authEmail" type="email" autocomplete="email" required /><label class="form-label" for="authPassword">Password</label><input class="form-input" id="authPassword" type="password" autocomplete="current-password" minlength="8" required /><p class="form-error" id="authError" role="alert"></p><button class="btn btn-primary" id="authSubmit" style="width:100%" type="submit">Sign in <span aria-hidden="true">→</span></button></form><p class="auth-switch" id="authSwitch">New to Photosite? <button type="button" id="authToggle">Create an account</button></p></div></div>
-    <div class="modal" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successTitle"><div class="modal-card success-card"><div class="success-icon">✓</div><div class="eyebrow">Order received</div><h2 id="successTitle">We’re making your memory.</h2><p id="successMessage">Your order has been received.</p><button class="btn btn-primary" id="successClose">Continue shopping</button></div></div>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script><script src="{{ url_for('static', filename='js/app.js') }}"></script>
-  </body>
+  </div>
+  <div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+    <div class="modal-card checkout-card"><button class="round-icon modal-close" id="checkoutClose"
+        aria-label="Close checkout">×</button>
+      <div class="eyebrow">Secure checkout</div>
+      <h2 id="checkoutTitle">Almost yours.</h2>
+      <p>We’ll send your order details to this email.</p>
+      <form id="checkoutForm" class="checkout-form">
+        <div class="checkout-layout">
+          <div><label class="form-label" for="name">Full name</label><input class="form-input" id="name" name="name"
+              autocomplete="name" required />
+            <div class="two-col">
+              <div><label class="form-label" for="email">Email address</label><input class="form-input" type="email"
+                  id="email" name="email" autocomplete="email" required /></div>
+              <div><label class="form-label" for="phone">Phone number</label><input class="form-input" type="tel"
+                  id="phone" name="phone" autocomplete="tel" required /></div>
+            </div><label class="form-label" for="address">Delivery address</label><textarea class="form-input"
+              id="address" name="address" rows="3" autocomplete="street-address" required></textarea>
+            <div class="two-col">
+              <div><label class="form-label" for="city">City</label><input class="form-input" id="city" name="city"
+                  autocomplete="address-level2" required /></div>
+              <div><label class="form-label" for="postalCode">PIN code</label><input class="form-input" id="postalCode"
+                  name="postal_code" autocomplete="postal-code" required /></div>
+            </div><label class="form-label" for="notes">Order note <span
+                class="optional">(optional)</span></label><textarea class="form-input" id="notes" name="notes" rows="2"
+              placeholder="Gift message or delivery note"></textarea>
+            <fieldset class="payment-options">
+              <legend class="form-label">Payment method</legend><label><input type="radio" name="payment_method"
+                  value="cod" checked /> Cash on Delivery</label><label id="razorpayOption"><input type="radio"
+                  name="payment_method" value="razorpay" /> Secure online payment</label>
+            </fieldset>
+          </div>
+          <aside class="order-summary">
+            <h3>Order summary</h3>
+            <div id="checkoutItems"></div>
+            <div class="summary-total"><span>Total</span><strong id="checkoutTotal">₹0</strong></div>
+          </aside>
+        </div>
+        <p id="checkoutError" class="form-error" role="alert"></p><button class="btn btn-primary" id="placeOrder"
+          type="submit">Place order <span aria-hidden="true">→</span></button>
+      </form>
+    </div>
+  </div>
+  <div class="modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <div class="modal-card auth-card"><button class="round-icon modal-close" id="authClose"
+        aria-label="Close sign in">×</button>
+      <div class="eyebrow">Keep your memories close</div>
+      <h2 id="authTitle">Welcome back.</h2>
+      <p id="authIntro">Sign in to see your orders and check out faster.</p>
+      <form id="authForm">
+        <div id="authNameField" hidden><label class="form-label" for="authName">Your name</label><input
+            class="form-input" id="authName" autocomplete="name" /></div><label class="form-label" for="authEmail">Email
+          address</label><input class="form-input" id="authEmail" type="email" autocomplete="email" required /><label
+          class="form-label" for="authPassword">Password</label><input class="form-input" id="authPassword"
+          type="password" autocomplete="current-password" minlength="8" required />
+        <p class="form-error" id="authError" role="alert"></p><button class="btn btn-primary" id="authSubmit"
+          style="width:100%" type="submit">Sign in <span aria-hidden="true">→</span></button>
+      </form>
+      <p class="auth-switch" id="authSwitch">New to Photosite? <button type="button" id="authToggle">Create an
+          account</button></p>
+    </div>
+  </div>
+  <div class="modal" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+    <div class="modal-card success-card">
+      <div class="success-icon">✓</div>
+      <div class="eyebrow">Order received</div>
+      <h2 id="successTitle">We’re making your memory.</h2>
+      <p id="successMessage">Your order has been received.</p><button class="btn btn-primary" id="successClose">Continue
+        shopping</button>
+    </div>
+  </div>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="../static/js/app.js"></script>
+</body>
+
 </html>
