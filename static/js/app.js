@@ -523,11 +523,6 @@ async function submitOrder(event) {
       )
     }
 
-    if (paymentMethod === 'razorpay') {
-      openRazorpay(data)
-      return
-    }
-
     cart = []
     renderCart()
     setModal($('#checkoutModal'), false)
@@ -537,55 +532,6 @@ async function submitOrder(event) {
     button.disabled = false
     button.innerHTML = 'Place order <span aria-hidden="true">→</span>'
   }
-}
-
-function openRazorpay(order) {
-  if (!window.Razorpay) {
-    $('#checkoutError').textContent =
-      'The payment window could not load. Please choose Cash on Delivery or try again.'
-    $('#placeOrder').disabled = false
-    return
-  }
-  const options = {
-    key: order.razorpay.key,
-    amount: order.amount * 100,
-    currency: 'INR',
-    name: order.razorpay.name,
-    description: order.razorpay.description,
-    order_id: order.razorpay.order_id,
-    prefill: {
-      name: $('#name').value,
-      email: $('#email').value,
-      contact: $('#phone').value,
-    },
-    theme: { color: '#fa714b' },
-    handler: async (response) => {
-      const verify = await fetch('/api/payments/razorpay/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(response),
-      })
-      const result = await parseJsonResponse(verify)
-      if (!verify.ok) {
-        $('#checkoutError').textContent =
-          result.error ||
-          'Payment verification failed. Please contact us with your payment ID.'
-        return
-      }
-      cart = []
-      renderCart()
-      setModal($('#checkoutModal'), false)
-      showOrderSuccess(result.order_number, 'razorpay')
-    },
-    modal: {
-      ondismiss: () => {
-        $('#placeOrder').disabled = false
-        $('#placeOrder').innerHTML =
-          'Place order <span aria-hidden="true">→</span>'
-      },
-    },
-  }
-  new Razorpay(options).open()
 }
 
 function setupCarousel() {
@@ -801,13 +747,6 @@ async function init() {
   }
 
   updateAccountLink()
-
-  if (!publicConfig.online_payments) {
-    $('#razorpayOption').classList.add('disabled')
-    $('#razorpayOption input').disabled = true
-    $('#razorpayOption').title =
-      'Online payments will be available when Razorpay is configured.'
-  }
 
   renderCart()
   setupCarousel()

@@ -19,7 +19,6 @@ from functools import wraps
 from pathlib import Path
 from typing import Any
 
-import razorpay
 from PIL import Image, ImageOps, UnidentifiedImageError
 from dotenv import load_dotenv
 from flask import Flask, jsonify, redirect, render_template, request, send_from_directory, session, url_for
@@ -395,14 +394,6 @@ def order_number() -> str:
     return f"PS-{datetime.now(timezone.utc):%Y%m%d}-{secrets.token_hex(3).upper()}"
 
 
-def razorpay_is_configured() -> bool:
-    return bool(os.getenv("RAZORPAY_KEY_ID") and os.getenv("RAZORPAY_KEY_SECRET"))
-
-
-def razorpay_client() -> razorpay.Client:
-    return razorpay.Client(auth=(os.environ["RAZORPAY_KEY_ID"], os.environ["RAZORPAY_KEY_SECRET"]))
-
-
 def current_user() -> sqlite3.Row | None:
     """Return the signed-in customer, dropping a stale session if the account was removed."""
     user_id = session.get("user_id")
@@ -534,10 +525,9 @@ def account():
 def public_config():
     return jsonify({
         "currency": "INR",
-        "online_payments": razorpay_is_configured(),
-        "razorpay_key_id": os.getenv("RAZORPAY_KEY_ID", "") if razorpay_is_configured() else "",
+        "online_payments": False,
+        "razorpay_key_id": "",
     })
-
 
 @app.get("/api/products")
 def product_list():
@@ -566,11 +556,7 @@ def create_order():
         return jsonify({"error": "Please complete all delivery details."}), 400
     if "@" not in fields["email"] or len(fields["phone"]) < 8:
         return jsonify({"error": "Please enter a valid email and phone number."}), 400
-    if fields["payment_method"] not in {"cod", "razorpay"}:
-        return jsonify({"error": "Select a valid payment method."}), 400
-    if fields["payment_method"] == "razorpay" and not razorpay_is_configured():
-        return jsonify({"error": "Online payments are not configured yet. Please choose Cash on Delivery."}), 400
-
+   
     try:
         photo_paths = save_photos()
         safe_items, total = calculate_items(items, photo_paths)
@@ -578,7 +564,7 @@ def create_order():
         return jsonify({"error": str(error)}), 400
 
     number = order_number()
-    payment_status = "pending" if fields["payment_method"] == "razorpay" else "cash_on_delivery"
+    payment_status = "cash_on_delivery"
     created_at = datetime.now(timezone.utc).isoformat()
     signed_in_user = current_user()
     with db_connection() as connection:
@@ -589,45 +575,22 @@ def create_order():
         )
         internal_id = cursor.lastrowid
 
-    response: dict[str, Any] = {"order_number": number, "amount": total, "payment_method": fields["payment_method"]}
-    if fields["payment_method"] == "razorpay":
-        payment_order = razorpay_client().order.create({"amount": total * 100, "currency": "INR", "receipt": number, "notes": {"photosite_order": number}})
-        with db_connection() as connection:
-            connection.execute("UPDATE orders SET razorpay_order_id = ? WHERE id = ?", (payment_order["id"], internal_id))
-        response["razorpay"] = {"key": os.environ["RAZORPAY_KEY_ID"], "order_id": payment_order["id"], "name": "Photosite", "description": f"Order {number}"}
-    else:
-        notify_new_order({
-            "order_number": number,
-            "amount": total,
-            "payment_method": "cod",
-            "payment_status": payment_status,
-            "customer_name": fields["name"],
-            **fields,
-        }, safe_items)
+        response: dict[str, Any] = {
+        "order_number": number,
+        "amount": total,
+        "payment_method": fields["payment_method"],
+    }
+
+    notify_new_order({
+        "order_number": number,
+        "amount": total,
+        "payment_method": "cod",
+        "payment_status": payment_status,
+        "customer_name": fields["name"],
+        **fields,
+    }, safe_items)
+
     return jsonify(response), 201
-
-
-@app.post("/api/payments/razorpay/verify")
-def verify_razorpay_payment():
-    data = request.get_json(silent=True) or {}
-    received_order_id = data.get("razorpay_order_id", "")
-    payment_id = data.get("razorpay_payment_id", "")
-    signature = data.get("razorpay_signature", "")
-    if not razorpay_is_configured() or not all((received_order_id, payment_id, signature)):
-        return jsonify({"error": "Payment verification data is incomplete."}), 400
-    payload = f"{received_order_id}|{payment_id}".encode()
-    expected = hmac.new(os.environ["RAZORPAY_KEY_SECRET"].encode(), payload, hashlib.sha256).hexdigest()
-    if not hmac.compare_digest(expected, signature):
-        return jsonify({"error": "Payment verification failed."}), 400
-    with db_connection() as connection:
-        order = connection.execute("SELECT * FROM orders WHERE razorpay_order_id = ?", (received_order_id,)).fetchone()
-        if not order:
-            return jsonify({"error": "Order not found."}), 404
-        connection.execute("UPDATE orders SET payment_status = 'paid', payment_method = 'razorpay', razorpay_payment_id = ? WHERE razorpay_order_id = ?", (payment_id, received_order_id))
-    order_data = dict(order)
-    order_data["payment_status"] = "paid"
-    notify_new_order(order_data, json.loads(order_data["items_json"]))
-    return jsonify({"message": "Payment verified.", "order_number": order["order_number"]})
 
 
 @app.get("/admin")
