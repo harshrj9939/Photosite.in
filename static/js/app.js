@@ -11,7 +11,7 @@ const productData = {
   'brass-edit': { name: 'The Brass Edit', price: 1699 },
 }
 let cart = []
-let selectedColor = 'walnut'
+let selectedColor = 'dark-walnut'
 let selectedPhoto = null
 
 // Add these variables for the collage customizer
@@ -54,41 +54,77 @@ function cartTotal() {
 
 function renderCart() {
   const container = $('#cartItems')
+
   const count = cart.reduce((sum, item) => sum + item.quantity, 0)
+
   $('#cartCount').textContent = count
   $('#cartCount').dataset.empty = count === 0
-  $('#cartTotal').textContent = formatPrice(cartTotal())
   $('#checkoutButton').disabled = !cart.length
+
   if (!cart.length) {
     container.innerHTML =
       '<p class="empty-cart">Your bag is waiting for a memory.</p>'
     return
   }
+
   container.innerHTML = cart
     .map(
       (item, index) => `
-    <div class="cart-row"><div class="cart-thumb">${item.preview ? `<img src="${item.preview}" alt="Custom frame preview">` : item.name}</div>
-    <div class="cart-row-info"><h3>${item.name}</h3><p>${item.type === 'custom' ? `${item.size.replace('x', ' × ')} in · ${item.color}` : 'Ready-to-style frame'}</p><button class="remove-item" data-remove="${index}">Remove</button></div><div class="cart-row-price">${formatPrice(item.price * item.quantity)}</div></div>`,
+    <div class="cart-row">
+      <div class="cart-thumb">
+        ${
+          item.preview
+            ? `<img src="${item.preview}" alt="Custom frame preview">`
+            : item.name
+        }
+      </div>
+
+      <div class="cart-row-info">
+        <h3>${item.name}</h3>
+
+        <p>
+          ${
+            item.type === 'custom'
+              ? `${item.size.replace('x', ' × ')} in · ${item.color}`
+              : 'Ready-to-style frame'
+          }
+        </p>
+
+        <p>Quantity: ${item.quantity}</p>
+
+        <button class="remove-item" data-remove="${index}">
+          Remove
+        </button>
+      </div>
+    </div>
+  `,
     )
     .join('')
-  $$('[data-remove]').forEach((button) =>
+
+  $$('[data-remove]').forEach((button) => {
     button.addEventListener('click', () => {
       cart.splice(Number(button.dataset.remove), 1)
       renderCart()
-    }),
-  )
+    })
+  })
 }
 
 function openCart() {
+  document.body.classList.add('cart-open')
+
   $('#cartDrawer').classList.add('open')
   $('#drawerBackdrop').classList.add('open')
   $('#cartDrawer').setAttribute('aria-hidden', 'false')
 }
+
 function closeCart() {
+  document.body.classList.remove('cart-open')
+
   $('#cartDrawer').classList.remove('open')
   $('#drawerBackdrop').classList.remove('open')
   $('#cartDrawer').setAttribute('aria-hidden', 'true')
 }
+
 function addToCart(item) {
   cart.push({ ...item, quantity: 1 })
   renderCart()
@@ -813,17 +849,39 @@ async function init() {
   $('#drawerBackdrop').addEventListener('click', closeCart)
 
   $('#checkoutButton').addEventListener('click', () => {
-    if (!cart.length) return
-    closeCart()
-    renderCheckout()
+  if (!cart.length) return;
 
-    if (currentUser) {
-      $('#name').value = currentUser.name
-      $('#email').value = currentUser.email
-    }
+  const items = cart.map((item, index) => {
+    const details = [
+      `Frame: ${item.name}`,
+      item.selectedFrame ? `Style: ${item.selectedFrame}` : '',
+      item.size ? `Size: ${item.size}` : '',
+      item.purpose ? `Purpose: ${item.purpose}` : '',
+      item.collageLayout ? `Layout: ${item.collageLayout}` : '',
+      `Quantity: ${item.quantity}`,
+      item.type === 'custom' && item.files
+        ? `Number of photos: ${item.files.length}`
+        : ''
+    ].filter(Boolean).join('\n');
 
-    setModal($('#checkoutModal'), true)
-  })
+    return `${index + 1}. ${details}`;
+  });
+
+  const message = [
+    'Hello Photosite! I am interested in ordering these frames.',
+    '',
+    ...items,
+    '',
+    'Please let me know the final price, available discounts, and delivery charges.',
+    'I would like to discuss the order with you here on WhatsApp.'
+  ].join('\n');
+
+  const whatsappURL =
+    'https://wa.me/917979094946?text=' +
+    encodeURIComponent(message);
+
+  window.open(whatsappURL, '_blank');
+});
 
   $('#accountLink').addEventListener('click', (event) => {
     if ($('#accountLink').dataset.guest === 'true') {
@@ -837,25 +895,21 @@ async function init() {
   )
 
   $('#authForm').addEventListener('submit', submitAuth)
-
   $$('.swatch').forEach((swatch) =>
     swatch.addEventListener('click', () => {
       selectedColor = swatch.dataset.color
       $$('.swatch').forEach((item) => item.classList.remove('active'))
       swatch.classList.add('active')
-
       const colors = {
         walnut: ['#a26344', '#6d3d28'],
         oak: ['#e4ded0', '#42453f'],
         charcoal: ['#3e413d', '#242624'],
         brass: ['#c48a3f', '#79501e'],
       }
-
       $('#previewFrame').style.background = colors[selectedColor][0]
       $('#previewFrame').style.borderColor = colors[selectedColor][1]
     }),
   )
-
   $('#size').addEventListener('change', updateCustomPrice)
 
   $('#photoUpload').addEventListener('change', (event) => {

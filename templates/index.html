@@ -11,16 +11,17 @@
   <link
     href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}" />
+  <link rel="stylesheet" href="../static/css/style.css" />
+  <link rel="stylesheet" href="../static/css/account.css" />
 </head>
 
 <body>
   <div class="announcement">FREE SHIPPING ON ORDERS OVER ₹499 <strong>— MADE JUST FOR YOU</strong></div>
   <header>
     <nav><a href="#home" class="brand" aria-label="Photosite home">Photo<span>site</span></a>
-      <div class="nav-links" id="navLinks"><a href="#shop">Shop frames</a><a href="#how-it-works">How it works</a><a
-          href="#stories">Our stories</a><a href="#footer">Help</a></div>
+      <div class="nav-links" id="navLinks"><a href="#shop">Shop frames</a><a
+          href="#stories">Category</a><a
+          href="#personImage">Our stories</a><a href="#footer">Help</a></div>
       <div class="nav-actions"><a class="account-link" id="accountLink" href="/account"
           data-guest="{{ 'false' if user else 'true' }}">{{ 'My account' if user else 'Sign in' }}</a><button
           class="round-icon" id="cartButton" aria-label="Open bag" title="Open bag"><span aria-hidden="true">♧</span><b
@@ -38,35 +39,57 @@
           class="hero-studio-image">
       </div>
 
-      <!-- Right side: Hero text -->
-      <div class="hero-copy">
-        <div class="eyebrow">Every memory deserves a place</div>
+      
+<!-- Right side: Hero text -->
+<div class="hero-copy">
 
-        <h1>Turn moments into <em>forever.</em></h1>
+  <div class="eyebrow">🎉 50 Years of Trust 🎊</div>
 
-        <p>
-          Beautiful, made-to-order photo frames for the people,
-          places, and milestones that make your story yours.
-        </p>
+  <h3>Get your <em>Customized Frames</em> delivered</h3>
 
-        <div class="button-row">
-          <button class="btn btn-primary open-customizer">
-            Start customising
-            <span aria-hidden="true">→</span>
-          </button>
+  <!-- Order Policy -->
+  <div class="hero-order-policy">
 
-          <a class="btn btn-light" href="#shop">
-            Explore our frames
-            <span class="button-circle">↓</span>
-          </a>
-        </div>
+    <h4>Steps to Get Your Favorite Frames</h4>
 
-        <div class="trust-line">
-          <div><span class="dot"></span> Made with care</div>
-          <div>★★★★★ <b>4.9</b> from 2,000+ stories</div>
-        </div>
-      </div>
-    </section>
+    <ol>
+      <li>Signup to your account</li>
+      <li>Select your favorite frame design</li>
+      <li>Send your photo to us on WhatsApp</li>
+      <li>Pay a minimal advance of <strong>Rs. 100</strong> for processing your order</li>
+      <li>Get it delivered at your doorstep &amp; pay the rest amount afterwards</li>
+    </ol>
+
+    <div class="hero-policy-note">
+      <strong>Note:</strong> This policy applies only within the perimeter of Raxaul city.
+    </div>
+
+  </div>
+
+  <!-- Original Buttons -->
+  <div class="button-row">
+
+    <button class="btn btn-primary open-customizer">
+      Start customising
+      <span aria-hidden="true">→</span>
+    </button>
+
+    <a class="btn btn-light" href="#shop">
+      Explore our frames
+      <span class="button-circle">↓</span>
+    </a>
+
+  </div>
+
+  <!-- Original Trust Line -->
+  <div class="trust-line">
+    <div><span class="dot"></span> Made with care</div>
+    <div>★★★★★ <b>4.9</b> from 2,000+ stories</div>
+  </div>
+
+</div>
+</section>
+
 
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/917979094946?text=Hello%20Photosite%2C%20I%20want%20to%20know%20more." class="whatsapp-float"
@@ -105,55 +128,56 @@
       <div class="carousel-wrap">
         <div class="carousel" id="carousel">
           <article class="product">
-            <div class="product-visual"><img src="../static/frames/frame1.jpg" alt="Concert crowd" /></div>
-            <div class="product-info">
-              <div>
-                <h3>Size: 10 x 15</h3>
-                <p>Classic wood</p>
-              </div>
-              <div>
-                <div class="price">From ₹500</div><button class="text-button add-product" data-product="everyday">Add to
-                  bag</button>
-              </div>
-            </div>
-          </article>
-          <article class="product">
             <div class="product-visual"><img src="../static/frames/frame2.jpg" alt="Mountain lake" /></div>
             <div class="product-info">
               <div>
-                <h3>Size: 12 x 18</h3>
+                <h3>Black and Brown frame - Size: 12 x 18</h3>
                 <p>Modern wood</p>
               </div>
               <div>
-                <div class="price">From ₹700</div><button class="text-button add-product" data-product="gallery">Add
+                <!-- <div class="price">From ₹700</div><button class="text-button add-product" data-product="gallery">Add
                   to bag</button>
-              </div>
+              </div> -->
             </div>
           </article>
+          <article class="product">
+            <div class="product-visual"><img src="../static/frames/frame1.jpg" alt="Concert crowd" /></div>
+            <div class="product-info">
+              <div>
+                <h3>Black and Brown frame - Size: 10 x 15</h3>
+                <p>Modern wood</p>
+              </div>
+              <div>
+                <!-- <div class="price">From ₹500</div><button class="text-button add-product" data-product="everyday">Add to
+                  bag</button>
+              </div> -->
+            </div>
+          </article>
+          
           <article class="product">
             <div class="product-visual"><img src="../static/frames/frame3.jpg" alt="Bright home interior" /></div>
             <div class="product-info">
               <div>
-                <h3>Size: 10 x 15</h3>
-                <p>Statement grain</p>
+                <h3>Black with Golden design frame - Size: 10 x 15</h3>
+                <p>Warm metal</p>
               </div>
               <div>
-                <div class="price">From ₹500</div><button class="text-button add-product" data-product="heritage">Add
+                <!-- <div class="price">From ₹500</div><button class="text-button add-product" data-product="heritage">Add
                   to bag</button>
-              </div>
+              </div> -->
             </div>
           </article>
           <article class="product">
             <div class="product-visual"><img src="../static/frames/frame4.jpg" alt="Person standing on hill" /></div>
             <div class="product-info">
               <div>
-                <h3>Size: 10 x 15</h3>
+                <h3>Black with Golden design frame - Size: 10 x 15</h3>
                 <p>Warm metal</p>
               </div>
               <div>
-                <div class="price">From ₹500</div><button class="text-button add-product"
+                <!-- <div class="price">From ₹500</div><button class="text-button add-product"
                   data-product="brass-edit">Add to bag</button>
-              </div>
+              </div> -->
             </div>
           </article>
         </div>
@@ -250,23 +274,101 @@
 
   </main>
 
+<!-- Frequently Asked Questions -->
+<section class="faq-section" id="faq">
+  <div class="faq-container">
+
+    <div class="faq-heading">
+      <span class="faq-eyebrow">NEED TO KNOW?</span>
+      <h2>Frequently Asked Questions</h2>
+      <p>
+        Everything you need to know about our frames,
+        ordering process, delivery, and returns.
+      </p>
+    </div>
+
+    <div class="faq-list">
+
+      <details class="faq-item">
+        <summary>
+          <span>What are the components of a frame?</span>
+          <span class="faq-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="faq-answer">
+          <p>
+            Each frame includes a frame border, a glass panel
+            cut to the required size, and an MDF backing that
+            holds your customised photo in place.
+          </p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          <span>How can I order a frame?</span>
+          <span class="faq-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="faq-answer">
+          <p>
+            Browse the frames on our website and click
+            <strong>Add to Bag</strong> on your desired frame.
+            Proceed to checkout to contact us on WhatsApp.
+            Share your photos, discuss the price, and pay the
+            required advance. Once your order is confirmed,
+            your frame will be delivered to your home within
+            our service area.
+          </p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          <span>Is home delivery available?</span>
+          <span class="faq-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="faq-answer">
+          <p>
+            Yes! We currently offer home delivery within
+            Raxaul. We hope to expand our delivery service
+            to more locations in the future.
+          </p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          <span>Do you have a return policy?</span>
+          <span class="faq-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="faq-answer">
+          <p>
+            As our frames are customised according to each
+            customer's requirements, returns are generally
+            not accepted. Please confirm your photo and frame
+            details carefully before placing your order.
+          </p>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
   <footer id="footer">
     <div class="footer-inner">
       <div class="footer-main">
         <div><a href="#home" class="brand">Photo<span>site</span></a>
-          <p class="footer-blurb">Frames for every chapter, made with feeling in every detail.</p>
+          <p class="footer-blurb">Frames for every chapter, made with feeling in every detail. <br> <br>Location: Raxaul, Bihar </p>
         </div>
         <div class="footer-col">
-          <h4>Shop</h4><a href="#shop">Photo frames</a><a href="#shop">Prints</a><a href="#shop">Gift cards</a><button
+          <h4>Shop</h4><a href="#shop">Photo frames</a><a href="#shop">Gift cards</a><button
             class="link-button open-customizer">Custom frame</button>
         </div>
         <div class="footer-col">
-          <h4>About</h4><a href="#how-it-works">Our process</a><a href="#stories">Inspiration</a><a
-            href="#footer">Journal</a><a href="#footer">Our promise</a>
+          <h4>About</h4><a href="#how-it-works">Our process</a><a href="#stories">Inspiration</a>
         </div>
         <div class="footer-col">
-          <h4>Need a hand?</h4><a href="mailto:hello@photosite.in">hello@photosite.in</a><a href="#footer">Shipping &
-            returns</a><a href="#footer">FAQs</a><a href="#footer">Contact us</a>
+          <h4>Need a hand?</h4><a href="mailto:samarthgupta853388@gmail.com">samarthgupta853388@gmail.com</a><a href="#faq">FAQs</a><a href="#footer">Contact us <br>+91 7979094946 </a>
         </div>
         <div class="footer-map">
           <div class="footer-map-heading">
@@ -301,8 +403,9 @@
     </div>
     <div class="cart-footer">
       <div class="cart-total"><span>Subtotal</span><strong id="cartTotal">₹0</strong></div>
-      <p>Shipping is calculated at checkout. Free above ₹1,499.</p><button class="btn btn-primary" id="checkoutButton"
-        disabled>Checkout <span aria-hidden="true">→</span></button>
+      <p>Shipping is calculated at checkout. Free above ₹499.</p><button class="btn btn-primary" id="checkoutButton" disabled>
+        Checkout To WhatsApp <span aria-hidden="true">→</span>
+      </button>
     </div>
   </aside>
 
@@ -394,8 +497,6 @@
 </div>
 
 <input type="hidden" id="selectedFrame" name="selected_frame" value="walnut">
-
-
 
 
           <label class="form-label" for="purpose">Frame purpose</label>
