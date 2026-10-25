@@ -3,7 +3,7 @@ const currency = new Intl.NumberFormat('en-IN', {
   currency: 'INR',
   maximumFractionDigits: 0,
 })
-const framePrices = { '6x8': 899, '8x10': 1199, '12x16': 1499, '16x20': 1999 }
+const framePrices = { '6x8': 250, '8x10': 300, '12x16': 700, '16x20': 1250 }
 const productData = {
   everyday: { name: 'The Everyday', price: 899 },
   gallery: { name: 'The Gallery', price: 1199 },
@@ -534,30 +534,70 @@ async function submitOrder(event) {
   }
 }
 
+
 function setupCarousel() {
   const carousel = $('#carousel')
+  const previousButton = $('#prev')
+  const nextButton = $('#next')
+
+  if (!carousel || !previousButton || !nextButton) return
+
   let index = 0
-  const update = () => {
-    const card = carousel.querySelector('.product')
-    const visible = window.innerWidth > 560 ? 3 : 1
-    const max = Math.max(0, carousel.children.length - visible)
-    index = Math.min(index, max)
-    carousel.style.transform = `translateX(${-index * (card.getBoundingClientRect().width + 18)}px)`
+  let timer = null
+
+  function getVisibleCount() {
+    return window.innerWidth > 900 ? 3 : window.innerWidth > 560 ? 2 : 1
   }
-  $('#next').addEventListener('click', () => {
-    index = (index + 1) % (window.innerWidth > 560 ? 2 : 4)
+
+  function getMaxIndex() {
+    return Math.max(0, carousel.children.length - getVisibleCount())
+  }
+
+  function update() {
+    const card = carousel.querySelector('.product')
+    if (!card) return
+
+    index = Math.min(index, getMaxIndex())
+
+    const styles = getComputedStyle(carousel)
+    const gap = parseFloat(styles.gap) || 18
+    const cardWidth = card.getBoundingClientRect().width
+
+    carousel.style.transform =
+      `translateX(-${index * (cardWidth + gap)}px)`
+  }
+
+  function moveNext() {
+    const max = getMaxIndex()
+    index = index >= max ? 0 : index + 1
     update()
-  })
-  $('#prev').addEventListener('click', () => {
-    const max = window.innerWidth > 560 ? 1 : 3
-    index = (index - 1 + max + 1) % (max + 1)
+  }
+
+  function movePrevious() {
+    const max = getMaxIndex()
+    index = index <= 0 ? max : index - 1
     update()
+  }
+
+  function startTimer() {
+    clearInterval(timer)
+    timer = setInterval(moveNext, 5500)
+  }
+
+  nextButton.addEventListener('click', () => {
+    moveNext()
+    startTimer()
   })
+
+  previousButton.addEventListener('click', () => {
+    movePrevious()
+    startTimer()
+  })
+
   window.addEventListener('resize', update)
-  setInterval(() => {
-    index = (index + 1) % (window.innerWidth > 560 ? 2 : 4)
-    update()
-  }, 5500)
+
+  update()
+  startTimer()
 }
 
 function setupFrameGallery() {
