@@ -3,12 +3,70 @@ const currency = new Intl.NumberFormat('en-IN', {
   currency: 'INR',
   maximumFractionDigits: 0,
 })
-const framePrices = { '6x8': 250, '8x10': 300, '12x16': 700, '16x20': 1250 }
+const framePrices = {
+  '6x8': 250,
+  '8x10': 300,
+  '12x16': 700,
+  '16x20': 1250
+}
 const productData = {
   everyday: { name: 'The Everyday', price: 899 },
   gallery: { name: 'The Gallery', price: 1199 },
   heritage: { name: 'The Heritage', price: 1499 },
   'brass-edit': { name: 'The Brass Edit', price: 1699 },
+
+  frame2: {
+    name: 'Black and Brown frame - Size: 12 x 18',
+    price: 700,
+  },
+  frame1: {
+    name: 'Black and Brown frame - Size: 10 x 15',
+    price: 500,
+  },
+  f3: {
+    name: 'Black with Golden design frame - Size: 10 x 15',
+    price: 500,
+  },
+  f4: {
+    name: 'Black with Golden design frame - Size: 10 x 15',
+    price: 500,
+  },
+  f5: {
+    name: 'Black with Golden design frame - Size: 10 x 15',
+    price: 500,
+  },
+  f6: {
+    name: 'Black with Golden design frame - Size: 10 x 15',
+    price: 500,
+  },
+  f7: {
+    name: 'Black with Golden design frame - Size: 10 x 15',
+    price: 500,
+  },
+  f8: {
+    name: 'Black with Golden design frame - Size: 10 x 15',
+    price: 500,
+  },
+  f9: {
+    name: 'Black with Golden design frame - Size: 10 x 15',
+    price: 500,
+  },
+  f10: {
+    name: 'Black with Golden design frame - Size: 10 x 15',
+    price: 500,
+  },
+  f11: {
+    name: 'Black with Golden design frame - Size: 10 x 15',
+    price: 500,
+  },
+  f12: {
+    name: 'Black with Golden design frame - Size: 10 x 15',
+    price: 500,
+  },
+  frame4: {
+    name: 'Black with Golden design frame - Size: 10 x 15',
+    price: 500,
+  },
 }
 let cart = []
 let selectedColor = 'dark-walnut'
@@ -19,7 +77,9 @@ let selectedLayout = '1-single'
 let selectedPhotos = [null]
 let activePhotoSlot = 0
 
-let publicConfig = { online_payments: false }
+let publicConfig = {
+  online_payments: false
+}
 let currentUser = null
 
 const $ = (selector) => document.querySelector(selector)
@@ -56,6 +116,7 @@ function renderCart() {
   const container = $('#cartItems')
 
   const count = cart.reduce((sum, item) => sum + item.quantity, 0)
+  $('#cartTotal').textContent = formatPrice(cartTotal())
 
   $('#cartCount').textContent = count
   $('#cartCount').dataset.empty = count === 0
@@ -80,7 +141,10 @@ function renderCart() {
       </div>
 
       <div class="cart-row-info">
-        <h3>${item.name}</h3>
+        <div class="cart-item-heading">
+  <h3>${item.name}</h3>
+  <strong>${formatPrice(item.price)}</strong>
+</div>
 
         <p>
           ${
@@ -126,27 +190,104 @@ function closeCart() {
 }
 
 function addToCart(item) {
-  cart.push({ ...item, quantity: 1 })
+  cart.push({
+    ...item,
+    quantity: 1
+  })
   renderCart()
   openCart()
 }
 
-const layoutOptions = [
-  { id: '1-single', count: 1, label: 'Single photo', group: '1 photo' },
-  { id: '2-side', count: 2, label: 'Side by side', group: '2 photos' },
-  { id: '2-vertical', count: 2, label: 'Stacked', group: '2 photos' },
-  { id: '2-diagonal', count: 2, label: 'Diagonal', group: '2 photos' },
-  { id: '3-feature', count: 3, label: '1 + 2', group: '3 photos' },
-  { id: '3-horizontal', count: 3, label: 'Triple row', group: '3 photos' },
-  { id: '3-vertical', count: 3, label: 'Triple stack', group: '3 photos' },
-  { id: '4-grid', count: 4, label: '2 × 2 grid', group: '4 photos' },
-  { id: '4-feature', count: 4, label: '1 + 3', group: '4 photos' },
-  { id: '4-portrait', count: 4, label: 'Balanced', group: '4 photos' },
-  { id: '5-grid', count: 5, label: 'Balanced 5', group: '5 photos' },
-  { id: '5-feature', count: 5, label: '1 + 4', group: '5 photos' },
-  { id: '6-grid', count: 6, label: '2 × 3 grid', group: '6 photos' },
-  { id: '6-landscape', count: 6, label: 'Wide grid', group: '6 photos' },
-  { id: '6-creative', count: 6, label: 'Creative grid', group: '6 photos' },
+const layoutOptions = [{
+    id: '1-single',
+    count: 1,
+    label: 'Single photo',
+    group: '1 photo'
+  },
+  {
+    id: '2-side',
+    count: 2,
+    label: 'Side by side',
+    group: '2 photos'
+  },
+  {
+    id: '2-vertical',
+    count: 2,
+    label: 'Stacked',
+    group: '2 photos'
+  },
+  {
+    id: '2-diagonal',
+    count: 2,
+    label: 'Diagonal',
+    group: '2 photos'
+  },
+  {
+    id: '3-feature',
+    count: 3,
+    label: '1 + 2',
+    group: '3 photos'
+  },
+  {
+    id: '3-horizontal',
+    count: 3,
+    label: 'Triple row',
+    group: '3 photos'
+  },
+  {
+    id: '3-vertical',
+    count: 3,
+    label: 'Triple stack',
+    group: '3 photos'
+  },
+  {
+    id: '4-grid',
+    count: 4,
+    label: '2 × 2 grid',
+    group: '4 photos'
+  },
+  {
+    id: '4-feature',
+    count: 4,
+    label: '1 + 3',
+    group: '4 photos'
+  },
+  {
+    id: '4-portrait',
+    count: 4,
+    label: 'Balanced',
+    group: '4 photos'
+  },
+  {
+    id: '5-grid',
+    count: 5,
+    label: 'Balanced 5',
+    group: '5 photos'
+  },
+  {
+    id: '5-feature',
+    count: 5,
+    label: '1 + 4',
+    group: '5 photos'
+  },
+  {
+    id: '6-grid',
+    count: 6,
+    label: '2 × 3 grid',
+    group: '6 photos'
+  },
+  {
+    id: '6-landscape',
+    count: 6,
+    label: 'Wide grid',
+    group: '6 photos'
+  },
+  {
+    id: '6-creative',
+    count: 6,
+    label: 'Creative grid',
+    group: '6 photos'
+  },
 ]
 
 function updateCustomPrice() {
@@ -264,11 +405,11 @@ function renderCollagePreview() {
     })
     .join('')
 
-  $('#previewPlaceholder').style.display = selectedPhotos.some(Boolean)
-    ? 'none'
-    : layout.count === 1
-      ? 'block'
-      : 'none'
+  $('#previewPlaceholder').style.display = selectedPhotos.some(Boolean) ?
+    'none' :
+    layout.count === 1 ?
+    'block' :
+    'none'
 }
 
 
@@ -300,28 +441,28 @@ function setupFrameDropdown() {
   }
 
   function selectFrame(option) {
-  const frameName = option.dataset.frame
-  const frameImage = option.dataset.image
-  const label = option.querySelector('span')?.textContent.trim()
+    const frameName = option.dataset.frame
+    const frameImage = option.dataset.image
+    const label = option.querySelector('span') ?.textContent.trim()
 
-  if (!frameName || !frameImage) return
+    if (!frameName || !frameImage) return
 
-  selectedFrame = frameName
-  selectedFrameInput.value = frameName
-  selectedLabel.textContent = label || frameName
+    selectedFrame = frameName
+    selectedFrameInput.value = frameName
+    selectedLabel.textContent = label || frameName
 
-  if (frameOverlay) {
-    frameOverlay.src = frameImage
+    if (frameOverlay) {
+      frameOverlay.src = frameImage
+    }
+
+    dropdown.querySelectorAll('.frame-dropdown-option').forEach((item) => {
+      const isSelected = item === option
+      item.classList.toggle('selected', isSelected)
+      item.setAttribute('aria-pressed', String(isSelected))
+    })
+
+    closeDropdown()
   }
-
-  dropdown.querySelectorAll('.frame-dropdown-option').forEach((item) => {
-    const isSelected = item === option
-    item.classList.toggle('selected', isSelected)
-    item.setAttribute('aria-pressed', String(isSelected))
-  })
-
-  closeDropdown()
-}
 
   trigger.addEventListener('click', () => {
     const isOpen = trigger.getAttribute('aria-expanded') === 'true';
@@ -378,9 +519,9 @@ function resetCustomizer() {
 
 function showOrderSuccess(orderNumber, paymentMethod) {
   $('#successMessage').textContent =
-    paymentMethod === 'cod'
-      ? `Order ${orderNumber} is confirmed. Pay when it arrives, and we’ll email you your order updates.`
-      : `Order ${orderNumber} is paid and confirmed. We’ll email you your order updates.`
+    paymentMethod === 'cod' ?
+    `Order ${orderNumber} is confirmed. Pay when it arrives, and we’ll email you your order updates.` :
+    `Order ${orderNumber} is paid and confirmed. We’ll email you your order updates.`
   setModal($('#successModal'), true)
 }
 
@@ -388,7 +529,7 @@ function renderCheckout() {
   $('#checkoutItems').innerHTML = cart
     .map(
       (item) =>
-        `<div class="summary-row"><div><b>${item.name}</b><small>${item.type === 'custom' ? `${item.size.replace('x', ' × ')} in · ${item.color}` : 'Ready-to-style frame'}</small></div><strong>${formatPrice(item.price * item.quantity)}</strong></div>`,
+      `<div class="summary-row"><div><b>${item.name}</b><small>${item.type === 'custom' ? `${item.size.replace('x', ' × ')} in · ${item.color}` : 'Ready-to-style frame'}</small></div><strong>${formatPrice(item.price * item.quantity)}</strong></div>`,
     )
     .join('')
   $('#checkoutTotal').textContent = formatPrice(cartTotal())
@@ -399,21 +540,21 @@ function setAuthMode(mode) {
   $('#authForm').dataset.mode = mode
   $('#authNameField').hidden = !registering
   $('#authName').required = registering
-  $('#authPassword').autocomplete = registering
-    ? 'new-password'
-    : 'current-password'
-  $('#authTitle').textContent = registering
-    ? 'Make a place for your memories.'
-    : 'Welcome back.'
-  $('#authIntro').textContent = registering
-    ? 'Create an account to save every Photosite order in one place.'
-    : 'Sign in to see your orders and check out faster.'
-  $('#authSubmit').innerHTML = registering
-    ? 'Create account <span aria-hidden="true">→</span>'
-    : 'Sign in <span aria-hidden="true">→</span>'
-  $('#authSwitch').innerHTML = registering
-    ? 'Already have an account? <button type="button" id="authToggle">Sign in</button>'
-    : 'New to Photosite? <button type="button" id="authToggle">Create an account</button>'
+  $('#authPassword').autocomplete = registering ?
+    'new-password' :
+    'current-password'
+  $('#authTitle').textContent = registering ?
+    'Make a place for your memories.' :
+    'Welcome back.'
+  $('#authIntro').textContent = registering ?
+    'Create an account to save every Photosite order in one place.' :
+    'Sign in to see your orders and check out faster.'
+  $('#authSubmit').innerHTML = registering ?
+    'Create account <span aria-hidden="true">→</span>' :
+    'Sign in <span aria-hidden="true">→</span>'
+  $('#authSwitch').innerHTML = registering ?
+    'Already have an account? <button type="button" id="authToggle">Sign in</button>' :
+    'New to Photosite? <button type="button" id="authToggle">Create an account</button>'
   $('#authToggle').addEventListener('click', () =>
     setAuthMode(registering ? 'login' : 'register'),
   )
@@ -447,10 +588,11 @@ async function submitAuth(event) {
     }
     if (mode === 'register') body.name = $('#authName').value
     const response = await fetch(
-      `/api/auth/${mode === 'register' ? 'register' : 'login'}`,
-      {
+      `/api/auth/${mode === 'register' ? 'register' : 'login'}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(body),
       },
     )
@@ -502,7 +644,7 @@ async function submitOrder(event) {
   formData.append('items', JSON.stringify(payloadItems))
 
   const customItem = cart.find((item) => item.type === 'custom')
-  if (customItem?.files?.length) {
+  if (customItem ?.files ?.length) {
     customItem.files.forEach((file) => formData.append('photos', file))
   }
 
@@ -630,8 +772,9 @@ function setupFrameGallery() {
   function renderDots() {
     const maxIndex = getMaxIndex()
 
-    dotsContainer.innerHTML = Array.from(
-      { length: maxIndex + 1 },
+    dotsContainer.innerHTML = Array.from({
+        length: maxIndex + 1
+      },
       (_, dotIndex) => `
         <button
           type="button"
@@ -778,7 +921,10 @@ function setupTestimonials() {
 
 async function init() {
   try {
-    ;[publicConfig, { user: currentUser }] = await Promise.all([
+    ;
+    [publicConfig, {
+      user: currentUser
+    }] = await Promise.all([
       fetch('/api/config').then((response) => response.json()),
       fetch('/api/auth/me').then((response) => response.json()),
     ])
@@ -828,39 +974,39 @@ async function init() {
   $('#drawerBackdrop').addEventListener('click', closeCart)
 
   $('#checkoutButton').addEventListener('click', () => {
-  if (!cart.length) return;
+    if (!cart.length) return;
 
-  const items = cart.map((item, index) => {
-    const details = [
-      `Frame: ${item.name}`,
-      item.selectedFrame ? `Style: ${item.selectedFrame}` : '',
-      item.size ? `Size: ${item.size}` : '',
-      item.purpose ? `Purpose: ${item.purpose}` : '',
-      item.collageLayout ? `Layout: ${item.collageLayout}` : '',
-      `Quantity: ${item.quantity}`,
-      item.type === 'custom' && item.files
-        ? `Number of photos: ${item.files.length}`
-        : ''
-    ].filter(Boolean).join('\n');
+    const items = cart.map((item, index) => {
+      const details = [
+        `Frame: ${item.name}`,
+        item.selectedFrame ? `Style: ${item.selectedFrame}` : '',
+        item.size ? `Size: ${item.size}` : '',
+        item.purpose ? `Purpose: ${item.purpose}` : '',
+        item.collageLayout ? `Layout: ${item.collageLayout}` : '',
+        `Quantity: ${item.quantity}`,
+        item.type === 'custom' && item.files ?
+        `Number of photos: ${item.files.length}` :
+        ''
+      ].filter(Boolean).join('\n');
 
-    return `${index + 1}. ${details}`;
+      return `${index + 1}. ${details}`;
+    });
+
+    const message = [
+      'Hello Photosite! I am interested in ordering these frames.',
+      '',
+      ...items,
+      '',
+      'Please let me know the final price, available discounts, and delivery charges.',
+      'I would like to discuss the order with you here on WhatsApp.'
+    ].join('\n');
+
+    const whatsappURL =
+      'https://wa.me/917979094946?text=' +
+      encodeURIComponent(message);
+
+    window.open(whatsappURL, '_blank');
   });
-
-  const message = [
-    'Hello Photosite! I am interested in ordering these frames.',
-    '',
-    ...items,
-    '',
-    'Please let me know the final price, available discounts, and delivery charges.',
-    'I would like to discuss the order with you here on WhatsApp.'
-  ].join('\n');
-
-  const whatsappURL =
-    'https://wa.me/917979094946?text=' +
-    encodeURIComponent(message);
-
-  window.open(whatsappURL, '_blank');
-});
 
   $('#accountLink').addEventListener('click', (event) => {
     if ($('#accountLink').dataset.guest === 'true') {
@@ -924,10 +1070,9 @@ async function init() {
 
     addToCart({
       type: 'custom',
-      name:
-        layout.count === 1
-          ? 'Custom photo frame'
-          : `Custom ${layout.count}-photo collage`,
+      name: layout.count === 1 ?
+        'Custom photo frame' :
+        `Custom ${layout.count}-photo collage`,
       size,
       color: selectedColor,
       selectedFrame,
@@ -943,17 +1088,25 @@ async function init() {
   })
 
   $$('.add-product').forEach((button) =>
-    button.addEventListener('click', () => {
-      const product = productData[button.dataset.product]
+  button.addEventListener('click', () => {
+    const product = productData[button.dataset.product]
 
-      addToCart({
-        type: 'product',
-        product_id: button.dataset.product,
-        name: product.name,
-        price: product.price,
-      })
-    }),
-  )
+    if (!product) {
+      console.error(
+        'Product not found:',
+        button.dataset.product,
+      )
+      return
+    }
+
+    addToCart({
+      type: 'product',
+      product_id: button.dataset.product,
+      name: product.name,
+      price: product.price,
+    })
+  }),
+)
 
   $('#checkoutForm').addEventListener('submit', submitOrder)
 

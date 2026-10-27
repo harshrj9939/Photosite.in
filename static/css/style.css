@@ -380,7 +380,7 @@ nav {
 .hero-copy .eyebrow {
   color: #d9432f;
 
-  font-size: 12px;
+  font-size: 15px;
 
   font-weight: 700;
 
@@ -5042,6 +5042,22 @@ body.cart-open .whatsapp-float-button {
   visibility: hidden;
   pointer-events: none;
   transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+
+.cart-item-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.cart-item-heading h3 {
+  margin: 0;
+}
+
+.cart-item-heading strong {
+  white-space: nowrap;
 }
 
 /* Sticky navbar */
